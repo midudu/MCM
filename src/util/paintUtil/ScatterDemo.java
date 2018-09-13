@@ -16,7 +16,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-class ScatterDemo extends ApplicationFrame {
+class ScatterDemo extends ApplicationFrame implements Paintable {
 
     public ScatterDemo(String title) {
 
@@ -38,7 +38,7 @@ class ScatterDemo extends ApplicationFrame {
         defaultXYDataset.addSeries("line", data1);
         defaultXYDataset.addSeries("circle", data2);*/
 
-        XYDataset defaultXYDataset = createDataset();
+        XYDataset defaultXYDataset = Paintable.createDefaultDataSet();
 
         JFreeChart chart = ChartFactory.createScatterPlot(
                 title, "People Numbers", "time",
@@ -66,46 +66,6 @@ class ScatterDemo extends ApplicationFrame {
         panel.setPreferredSize(new java.awt.Dimension(500, 500));
 
         this.setContentPane(panel);
-    }
-
-    private static XYDataset createDataset() {
-
-        XYSeries series1 = new XYSeries("First");
-        series1.add(1.0, 1.0);
-        series1.add(2.0, 4.0);
-        series1.add(3.0, 3.0);
-        series1.add(4.0, 5.0);
-        series1.add(5.0, 5.0);
-        series1.add(6.0, 7.0);
-        series1.add(7.0, 7.0);
-        series1.add(8.0, 8.0);
-
-        XYSeries series2 = new XYSeries("Second");
-        series2.add(1.0, 5.0);
-        series2.add(2.0, 7.0);
-        series2.add(3.0, 6.0);
-        series2.add(4.0, 8.0);
-        series2.add(5.0, 4.0);
-        series2.add(6.0, 4.0);
-        series2.add(7.0, 2.0);
-        series2.add(8.0, 1.0);
-
-        XYSeries series3 = new XYSeries("Third");
-        series3.add(3.0, 4.0);
-        series3.add(4.0, 3.0);
-        series3.add(5.0, 2.0);
-        series3.add(6.0, 3.0);
-        series3.add(7.0, 6.0);
-        series3.add(8.0, 3.0);
-        series3.add(9.0, 4.0);
-        series3.add(10.0, 3.0);
-
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series1);
-        dataset.addSeries(series2);
-        dataset.addSeries(series3);
-
-        return dataset;
     }
 
     public static void main(String[] args) {
