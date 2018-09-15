@@ -1,6 +1,8 @@
 package problem.component;
 
-public class FlightRecord {
+import java.util.Comparator;
+
+public class FlightRecord implements Comparable<FlightRecord> {
 
     private int id;
 
@@ -60,5 +62,21 @@ public class FlightRecord {
 
     public String getPlaneType() {
         return planeType;
+    }
+
+    public int compareTo(FlightRecord o) {
+
+        if (this.arrivalTime != o.arrivalTime) {
+            return Integer.compare(this.arrivalTime, o.arrivalTime);
+
+        } else if (leftTime != o.leftTime) {
+            return Integer.compare(this.leftTime, o.leftTime);
+
+        } else {
+
+            return Integer.compare(this.id, o.id);
+        }
+
+
     }
 }
