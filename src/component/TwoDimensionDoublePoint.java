@@ -1,16 +1,16 @@
 package component;
 
-public class DoublePoint {
+public class TwoDimensionDoublePoint {
 
     private double x;
     private double y;
 
-    public DoublePoint(double x, double y) {
+    public TwoDimensionDoublePoint(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public DoublePoint() {
+    public TwoDimensionDoublePoint() {
 
         this(0.0,0.0);
     }

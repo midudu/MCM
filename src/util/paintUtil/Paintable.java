@@ -1,6 +1,6 @@
 package util.paintUtil;
 
-import component.DoublePoint;
+import component.TwoDimensionDoublePoint;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public interface Paintable {
 
     public static XYDataset createDataSet(
-            ArrayList<ArrayList<DoublePoint>> data) {
+            ArrayList<ArrayList<TwoDimensionDoublePoint>> data) {
 
         ArrayList<XYSeries> series = new ArrayList<>(data.size());
 
