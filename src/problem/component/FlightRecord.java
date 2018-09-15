@@ -64,6 +64,10 @@ public class FlightRecord implements Comparable<FlightRecord> {
         return planeType;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public int compareTo(FlightRecord o) {
 
         if (this.arrivalTime != o.arrivalTime) {

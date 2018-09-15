@@ -1,0 +1,7 @@
+id  arrivalTime  arrivalFlightName  arrivalType  planeType  leftTime  leftFlightName  leftType
+7  28435  NV6489  D  W  28855  NV880  I  
+10  28445  NV897  D  W  31020  NV662  I  
+248  28825  NV6589  D  W  29545  NV810  I  
+290  29360  NV698  D  W  29490  NV698  I  
+83  29575  NV674  D  W  29665  NV674  I  
+155  29900  NV6489  D  W  30040  NV658  I  

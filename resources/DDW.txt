@@ -1,0 +1,1 @@
+id  arrivalTime  arrivalFlightName  arrivalType  planeType  leftTime  leftFlightName  leftType
