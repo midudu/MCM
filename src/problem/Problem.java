@@ -21,7 +21,7 @@ public class Problem {
 
         excelReader.importXlsFile(
                 "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
-                0,true,
+                0, true,
                 1, 306,
                 0, -1, originalData);
 
@@ -53,9 +53,36 @@ public class Problem {
             int left = convertDateToMinute(leftDate)
                     + convertTimeToMinute(leftTime);
 
-            FlightRecord flightRecord = new FlightRecord(arrival, left,
-            arrivalFlightName, leftFlightName, arrivalType, leftType, planeType);
+            FlightRecord flightRecord = new FlightRecord(i, arrival, left,
+                    arrivalFlightName, leftFlightName, arrivalType, leftType, planeType);
             this.flightRecordArrayList.add(flightRecord);
+        }
+    }
+
+    protected void getGatesInformationArrayListFromExcel() {
+
+        ArrayList<ArrayList<String>> originalData
+                = new ArrayList<>();
+
+        excelReader.importXlsFile(
+                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
+                2, true,
+                1, 70,
+                0, -1, originalData);
+
+        for (int i = 0; i < originalData.size(); i++) {
+
+            String name = originalData.get(i).get(0);
+            String location = originalData.get(i).get(2);
+            String arrivalType = originalData.get(i).get(3);
+            String leftType = originalData.get(i).get(4);
+            String planeType = originalData.get(i).get(5);
+
+            GatesInformation gatesInformation
+                    = new GatesInformation(i, name, location,
+                    arrivalType, leftType, planeType);
+
+            this.gatesInformationArrayList.add(gatesInformation);
         }
     }
 
@@ -85,6 +112,8 @@ public class Problem {
         Problem problem = new Problem();
 
         problem.getFlightRecordArrayListFromExcel();
+
+        problem.getGatesInformationArrayListFromExcel();
 
         System.out.println("haha");
     }

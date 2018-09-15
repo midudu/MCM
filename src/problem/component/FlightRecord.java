@@ -2,6 +2,8 @@ package problem.component;
 
 public class FlightRecord {
 
+    private int id;
+
     // unit: min
     private int arrivalTime;
 
@@ -18,10 +20,11 @@ public class FlightRecord {
 
     private String planeType;
 
-    public FlightRecord(int arrivalTime, int leftTime,
+    public FlightRecord(int id, int arrivalTime, int leftTime,
                         String arrivalFlightName, String leftFlightName,
                         String arrivalType, String leftType, String planeType) {
 
+        this.id = id;
         this.arrivalTime = arrivalTime;
         this.leftTime = leftTime;
         this.arrivalFlightName = arrivalFlightName;
