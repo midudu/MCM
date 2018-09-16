@@ -2,9 +2,12 @@ package problem.problemOne;
 
 import problem.Problem;
 import problem.component.FlightRecord;
+import problem.component.GatesInformation;
 import util.ioUtil.txt.TxtWriter;
+import util.paintUtil.opencv.DrawTimeSequence;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.TreeSet;
 
 public class ProblemOne extends Problem {
@@ -17,14 +20,35 @@ public class ProblemOne extends Problem {
     private TreeSet<FlightRecord> IDW = new TreeSet<>();
     private TreeSet<FlightRecord> IIN = new TreeSet<>();
     private TreeSet<FlightRecord> IIW = new TreeSet<>();
+
+    private TreeSet<FlightRecord> DIN_IDN = new TreeSet<>();
+    private TreeSet<FlightRecord> DIW_IDW = new TreeSet<>();
+
+    private boolean mergeFlag = true;
+
     private ArrayList<TreeSet<FlightRecord>> treeSetArrayList
             = new ArrayList<>();
 
     private ArrayList<ArrayList<ArrayList<FlightRecord>>> divisionResult
             = new ArrayList<>();
 
-    private void generateFlightRecordSets() {
+    private HashSet<GatesInformation> I2I_W = new HashSet<>();
+    private HashSet<GatesInformation> D2D_W = new HashSet<>();
+    private HashSet<GatesInformation> I2DI_W = new HashSet<>();
+    private HashSet<GatesInformation> D2DI_W = new HashSet<>();
+    private HashSet<GatesInformation> DI2D_W = new HashSet<>();
+    private HashSet<GatesInformation> DI2I_W = new HashSet<>();
+    private HashSet<GatesInformation> DI2DI_W = new HashSet<>();
+    private HashSet<GatesInformation> I2I_N = new HashSet<>();
+    private HashSet<GatesInformation> D2D_N = new HashSet<>();
+    private HashSet<GatesInformation> I2DI_N = new HashSet<>();
+    private HashSet<GatesInformation> D2DI_N = new HashSet<>();
+    private HashSet<GatesInformation> DI2D_N = new HashSet<>();
+    private HashSet<GatesInformation> DI2I_N = new HashSet<>();
+    private HashSet<GatesInformation> DI2DI_N = new HashSet<>();
 
+
+    private void generateFlightRecordSets() {
 
         for (FlightRecord flightRecord : this.flightRecordArrayList) {
 
@@ -76,14 +100,28 @@ public class ProblemOne extends Problem {
             }
         }
 
+        if (mergeFlag) {
+            this.DIN_IDN.addAll(this.DIN);
+            this.DIN_IDN.addAll(this.IDN);
+
+            this.DIW_IDW.addAll(this.DIW);
+            this.DIW_IDW.addAll(this.IDW);
+        }
+
         this.treeSetArrayList.add(this.DDN);
         this.treeSetArrayList.add(this.DDW);
-        this.treeSetArrayList.add(this.DIN);
-        this.treeSetArrayList.add(this.DIW);
-        this.treeSetArrayList.add(this.IDN);
-        this.treeSetArrayList.add(this.IDW);
         this.treeSetArrayList.add(this.IIN);
         this.treeSetArrayList.add(this.IIW);
+        if (mergeFlag) {
+            this.treeSetArrayList.add(this.DIN_IDN);
+            this.treeSetArrayList.add(this.DIW_IDW);
+
+        } else {
+            this.treeSetArrayList.add(this.DIN);
+            this.treeSetArrayList.add(this.DIW);
+            this.treeSetArrayList.add(this.IDN);
+            this.treeSetArrayList.add(this.IDW);
+        }
     }
 
     private void generateTxtFilesOfEightTreeSets() {
@@ -177,19 +215,135 @@ public class ProblemOne extends Problem {
         }
     }
 
+    private void generateGatesInformationSets() {
+
+        for (GatesInformation gatesInformation : this.gatesInformationArrayList) {
+
+            String arrivalType = gatesInformation.getArrivalType();
+            String leftType = gatesInformation.getLeftType();
+            String planeType = gatesInformation.getPlaneType();
+
+            int result = 0;
+
+            if (arrivalType.contains("D")) {
+                result += 200;
+            }
+            if (arrivalType.contains("I")) {
+                result += 100;
+            }
+            if (leftType.contains("D")) {
+                result+=20;
+            }
+            if (leftType.contains("I")) {
+                result+=10;
+            }
+            if (planeType.contains("N")) {
+                result += 1;
+            } else if (planeType.contains("W")) {
+                result += 2;
+            }
+
+            switch (result) {
+                case 111: {
+                    I2I_N.add(gatesInformation);
+                    break;
+                }
+                case 112: {
+                    I2I_W.add(gatesInformation);
+                    break;
+                }
+                case 131:{
+                    I2DI_N.add(gatesInformation);
+                    break;
+                }
+                case 132:{
+                    I2DI_W.add(gatesInformation);
+                    break;
+                }
+                case 221:{
+                    D2D_N.add(gatesInformation);
+                    break;
+                }
+                case 222:{
+                    D2D_W.add(gatesInformation);
+                    break;
+                }
+                case 231:{
+                    D2DI_N.add(gatesInformation);
+                    break;
+                }
+                case 232:{
+                    D2DI_W.add(gatesInformation);
+                    break;
+                }
+                case 311:{
+                    DI2I_N.add(gatesInformation);
+                    break;
+                }
+                case 312:{
+                    DI2I_W.add(gatesInformation);
+                    break;
+                }
+                case 321:{
+                    DI2D_N.add(gatesInformation);
+                    break;
+                }
+                case 322:{
+                    DI2D_W.add(gatesInformation);
+                    break;
+                }
+                case 331:{
+                    DI2DI_N.add(gatesInformation);
+                    break;
+                }
+                case 332:{
+                    DI2DI_W.add(gatesInformation);
+                    break;
+                }
+                default:{
+                    throw new RuntimeException();
+                }
+            }
+        }
+    }
+
+    private void showResultInPNGForm() {
+
+        String[] fileNameSet = {"DDN", "DDW", "IIN", "IIW", "DIN_IDN", "DIW_IDW"};
+        if (fileNameSet.length != this.divisionResult.size()) {
+            throw new RuntimeException();
+        }
+
+        for (int i = 0; i < this.divisionResult.size(); i++) {
+
+            if (this.divisionResult.get(i).isEmpty()) {
+                continue;
+            }
+
+            String fileName = "resources/" + fileNameSet[i] + ".png";
+            DrawTimeSequence.drawTimeSequenceTable(fileName,
+                    this.divisionResult.get(i));
+        }
+    }
+
     // Below is for test
     public static void main(String[] args) {
 
         ProblemOne problemOne = new ProblemOne();
-        problemOne.getFlightRecordArrayListFromExcel();
 
+        problemOne.getFlightRecordArrayListFromExcel();
         problemOne.generateFlightRecordSets();
+
+        problemOne.getGatesInformationArrayListFromExcel();
+        problemOne.generateGatesInformationSets();
 
         //problemOne.generateTxtFilesOfEightTreeSets();
 
         problemOne.divideByGreedyMethod(
                 problemOne.treeSetArrayList,
                 problemOne.divisionResult);
+
+        problemOne.showResultInPNGForm();
 
         System.out.println("haha");
     }

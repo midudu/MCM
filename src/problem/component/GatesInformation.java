@@ -25,4 +25,28 @@ public class GatesInformation {
         this.leftType = leftType;
         this.planeType = planeType;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPlaneType() {
+        return planeType;
+    }
+
+    public String getLeftType() {
+        return leftType;
+    }
+
+    public String getArrivalType() {
+        return arrivalType;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
