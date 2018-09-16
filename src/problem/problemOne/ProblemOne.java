@@ -6,9 +6,7 @@ import problem.component.GatesInformation;
 import util.ioUtil.txt.TxtWriter;
 import util.paintUtil.opencv.DrawTimeSequence;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class ProblemOne extends Problem {
 
@@ -47,6 +45,11 @@ public class ProblemOne extends Problem {
     private HashSet<GatesInformation> DI2I_N = new HashSet<>();
     private HashSet<GatesInformation> DI2DI_N = new HashSet<>();
 
+    private int conflictCount = 0;
+    HashSet<FlightRecord> conflictRecord = new HashSet<>();
+
+
+    private ArrayList<ArrayList<LinkedList<FlightRecord>>> gate = new ArrayList<>();
 
     private void generateFlightRecordSets() {
 
@@ -232,10 +235,10 @@ public class ProblemOne extends Problem {
                 result += 100;
             }
             if (leftType.contains("D")) {
-                result+=20;
+                result += 20;
             }
             if (leftType.contains("I")) {
-                result+=10;
+                result += 10;
             }
             if (planeType.contains("N")) {
                 result += 1;
@@ -252,55 +255,55 @@ public class ProblemOne extends Problem {
                     I2I_W.add(gatesInformation);
                     break;
                 }
-                case 131:{
+                case 131: {
                     I2DI_N.add(gatesInformation);
                     break;
                 }
-                case 132:{
+                case 132: {
                     I2DI_W.add(gatesInformation);
                     break;
                 }
-                case 221:{
+                case 221: {
                     D2D_N.add(gatesInformation);
                     break;
                 }
-                case 222:{
+                case 222: {
                     D2D_W.add(gatesInformation);
                     break;
                 }
-                case 231:{
+                case 231: {
                     D2DI_N.add(gatesInformation);
                     break;
                 }
-                case 232:{
+                case 232: {
                     D2DI_W.add(gatesInformation);
                     break;
                 }
-                case 311:{
+                case 311: {
                     DI2I_N.add(gatesInformation);
                     break;
                 }
-                case 312:{
+                case 312: {
                     DI2I_W.add(gatesInformation);
                     break;
                 }
-                case 321:{
+                case 321: {
                     DI2D_N.add(gatesInformation);
                     break;
                 }
-                case 322:{
+                case 322: {
                     DI2D_W.add(gatesInformation);
                     break;
                 }
-                case 331:{
+                case 331: {
                     DI2DI_N.add(gatesInformation);
                     break;
                 }
-                case 332:{
+                case 332: {
                     DI2DI_W.add(gatesInformation);
                     break;
                 }
-                default:{
+                default: {
                     throw new RuntimeException();
                 }
             }
@@ -309,21 +312,211 @@ public class ProblemOne extends Problem {
 
     private void showResultInPNGForm() {
 
-        String[] fileNameSet = {"DDN", "DDW", "IIN", "IIW", "DIN_IDN", "DIW_IDW"};
-        if (fileNameSet.length != this.divisionResult.size()) {
+        if (mergeFlag) {
+            String[] fileNameSet = {"DDN", "DDW", "IIN", "IIW", "DIN_IDN", "DIW_IDW"};
+
+            if (fileNameSet.length != this.divisionResult.size()) {
+                throw new RuntimeException();
+            }
+
+            for (int i = 0; i < this.divisionResult.size(); i++) {
+
+                if (this.divisionResult.get(i).isEmpty()) {
+                    continue;
+                }
+
+                String fileName = "resources/merge/" + fileNameSet[i] + ".png";
+                DrawTimeSequence.drawTimeSequenceTable(fileName,
+                        this.divisionResult.get(i));
+            }
+        } else {
+
+            String[] fileNameSet
+                    = {"DDN", "DDW", "IIN", "IIW", "DIN", "DIW", "IDN", "IDW"};
+
+            if (fileNameSet.length != this.divisionResult.size()) {
+                throw new RuntimeException();
+            }
+
+            for (int i = 0; i < this.divisionResult.size(); i++) {
+
+                if (this.divisionResult.get(i).isEmpty()) {
+                    continue;
+                }
+
+                String fileName = "resources/unmerge/" + fileNameSet[i] + ".png";
+                DrawTimeSequence.drawTimeSequenceTable(fileName,
+                        this.divisionResult.get(i));
+            }
+        }
+    }
+
+    private void initArrayListQueue() {
+
+        ArrayList<LinkedList<FlightRecord>> IIW = new ArrayList<>();
+        for (int i = 0; i < 17; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            IIW.add(queue);
+        }
+
+        ArrayList<LinkedList<FlightRecord>> IIN = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            IIN.add(queue);
+        }
+
+        ArrayList<LinkedList<FlightRecord>> DDW = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            DDW.add(queue);
+        }
+
+        ArrayList<LinkedList<FlightRecord>> DDN = new ArrayList<>();
+        for (int i = 0; i < 35; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            DDN.add(queue);
+        }
+
+        ArrayList<LinkedList<FlightRecord>> DIW = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            DIW.add(queue);
+        }
+
+        ArrayList<LinkedList<FlightRecord>> DIN = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            DIN.add(queue);
+        }
+
+        ArrayList<LinkedList<FlightRecord>> IDW = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            IDW.add(queue);
+        }
+
+        ArrayList<LinkedList<FlightRecord>> IDN = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            LinkedList<FlightRecord> queue = new LinkedList<>();
+            IDN.add(queue);
+        }
+
+        this.gate.add(IIW);
+        this.gate.add(IIN);
+        this.gate.add(IDW);
+        this.gate.add(IDN);
+        this.gate.add(DIW);
+        this.gate.add(DIN);
+        this.gate.add(DDW);
+        this.gate.add(DDN);
+    }
+
+    private void getResultWithQueueMethod() {
+
+        this.getFlightRecordArrayListFromExcel();
+
+        TreeSet<FlightRecord> flightRecordTreeSet
+                = new TreeSet<>(this.flightRecordArrayList);
+
+        initArrayListQueue();
+
+        Iterator<FlightRecord> iterator = flightRecordTreeSet.iterator();
+
+        int index = 0;
+
+        while (iterator.hasNext()) {
+
+            FlightRecord flightRecord = iterator.next();
+
+            System.out.print(index);
+            index++;
+
+            decideCurrentFlightRecordBelongs(flightRecord);
+        }
+
+        System.out.println("haha");
+    }
+
+    private void decideCurrentFlightRecordBelongs(FlightRecord flightRecord) {
+
+        String arrivalType = flightRecord.getArrivalType();
+        String leftType = flightRecord.getLeftType();
+        String planeType = flightRecord.getPlaneType();
+        int leftTime = flightRecord.getLeftTime();
+
+        int belongingIndex = calculateFlightBelongingIndex(
+                arrivalType, leftType, planeType);
+
+        if (belongingIndex < 0 || belongingIndex > 7) {
             throw new RuntimeException();
         }
 
-        for (int i = 0; i < this.divisionResult.size(); i++) {
+        ArrayList<LinkedList<FlightRecord>> currentTypeGates
+                = this.gate.get(belongingIndex);
 
-            if (this.divisionResult.get(i).isEmpty()) {
-                continue;
+        int gateIndex = -1;
+        int maxExistingFlightNumbers = 0;
+        for (int i = 0; i < currentTypeGates.size(); i++) {
+
+            LinkedList<FlightRecord> currentGate = currentTypeGates.get(i);
+            if (currentGate.isEmpty()) {
+                gateIndex = i;
+            } else {
+                int lastFlightLeftTime =
+                        currentGate.getLast().getLeftTime();
+                if ( lastFlightLeftTime + 75 <= leftTime ) {
+                    int existingFlightNumbers = currentGate.size();
+                    if (existingFlightNumbers > maxExistingFlightNumbers) {
+                        maxExistingFlightNumbers = existingFlightNumbers;
+                        gateIndex = i;
+                    }
+                }
             }
-
-            String fileName = "resources/" + fileNameSet[i] + ".png";
-            DrawTimeSequence.drawTimeSequenceTable(fileName,
-                    this.divisionResult.get(i));
         }
+
+        /*if (gateIndex == -1) {
+            throw new RuntimeException();
+        }*/
+
+        if (gateIndex == -1) {
+            this.conflictCount++;
+            this.conflictRecord.add(flightRecord);
+
+        } else {
+            currentTypeGates.get(gateIndex).add(flightRecord);
+        }
+    }
+
+    private int calculateFlightBelongingIndex(
+            String arrivalType, String leftType, String planeType) {
+
+        int result = 0;
+
+        if (arrivalType.equals("I")) {
+            result += 0;
+        } else if (arrivalType.equals("D")) {
+            result += 4;
+        } else {
+            throw new RuntimeException();
+        }
+
+        if (leftType.equals("I")) {
+            result += 0;
+        } else if (leftType.equals("D")) {
+            result += 2;
+        } else {
+            throw new RuntimeException();
+        }
+
+        if (planeType.equals("W")) {
+            result += 0;
+        } else if (planeType.equals("N")) {
+            result += 1;
+        } else {
+            throw new RuntimeException();
+        }
+
+        return result;
     }
 
     // Below is for test
@@ -331,17 +524,7 @@ public class ProblemOne extends Problem {
 
         ProblemOne problemOne = new ProblemOne();
 
-        problemOne.getFlightRecordArrayListFromExcel();
-        problemOne.generateFlightRecordSets();
-
-        problemOne.getGatesInformationArrayListFromExcel();
-        problemOne.generateGatesInformationSets();
-
-        //problemOne.generateTxtFilesOfEightTreeSets();
-
-        problemOne.divideByGreedyMethod(
-                problemOne.treeSetArrayList,
-                problemOne.divisionResult);
+        problemOne.getResultWithQueueMethod();
 
         problemOne.showResultInPNGForm();
 

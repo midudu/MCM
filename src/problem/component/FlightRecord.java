@@ -70,11 +70,11 @@ public class FlightRecord implements Comparable<FlightRecord> {
 
     public int compareTo(FlightRecord o) {
 
-        if (this.arrivalTime != o.arrivalTime) {
-            return Integer.compare(this.arrivalTime, o.arrivalTime);
-
-        } else if (leftTime != o.leftTime) {
+        if (leftTime != o.leftTime) {
             return Integer.compare(this.leftTime, o.leftTime);
+
+        } else if (this.arrivalTime != o.arrivalTime) {
+            return Integer.compare(this.arrivalTime, o.arrivalTime);
 
         } else {
 

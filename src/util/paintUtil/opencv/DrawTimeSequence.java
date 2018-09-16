@@ -47,6 +47,11 @@ public class DrawTimeSequence {
                 pt2.x = leftTime - startTime;
 
                 Imgproc.rectangle(resultMat, pt1, pt2, new Scalar(255,255,255), -1);
+
+                pt1.x = pt2.x;
+                pt2.x += 45;
+
+                Imgproc.rectangle(resultMat, pt1, pt2, new Scalar(0,0,255), -1);
             }
         }
 

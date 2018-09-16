@@ -22,7 +22,7 @@ public class Problem {
         excelReader.importXlsFile(
                 "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
                 0, true,
-                1, 306,
+                1, 243,
                 0, -1, originalData);
 
         for (int i = 0; i < originalData.size(); i++) {
