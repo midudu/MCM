@@ -5,6 +5,7 @@ import problem.component.GatesInformation;
 import util.ioUtil.excel.excelReader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Problem {
 
@@ -105,16 +106,39 @@ public class Problem {
                 + Integer.valueOf(splitResult[1].trim()));
     }
 
+    private void dealTicketsSheet() {
+
+        ArrayList<ArrayList<String>> originalData
+                = new ArrayList<>();
+
+        excelReader.importXlsFile(
+                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
+                0, true,
+                1, 243,
+                0, -1, originalData);
+
+        HashSet<String> arrivalFlightSet = new HashSet<>();
+
+        for (int i = 0; i < originalData.size(); i++) {
+
+            String arrivalFlight = originalData.get(i).get(2);
+
+            if (arrivalFlightSet.contains(arrivalFlight)) {
+                System.out.println(arrivalFlight);
+            } else {
+                arrivalFlightSet.add(arrivalFlight);
+            }
+        }
+
+        System.out.println("haha");
+    }
+
 
     // Below is for test
     public static void main(String[] args) {
 
         Problem problem = new Problem();
 
-        problem.getFlightRecordArrayListFromExcel();
-
-        problem.getGatesInformationArrayListFromExcel();
-
-        System.out.println("haha");
+        problem.dealTicketsSheet();
     }
 }
