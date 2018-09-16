@@ -49,7 +49,8 @@ public class ProblemOne extends Problem {
     HashSet<FlightRecord> conflictRecord = new HashSet<>();
 
 
-    private ArrayList<ArrayList<LinkedList<FlightRecord>>> gate = new ArrayList<>();
+    private ArrayList<ArrayList<LinkedList<FlightRecord>>> gate
+            = new ArrayList<>();
 
     private void generateFlightRecordSets() {
 
@@ -326,7 +327,7 @@ public class ProblemOne extends Problem {
                 }
 
                 String fileName = "resources/merge/" + fileNameSet[i] + ".png";
-                DrawTimeSequence.drawTimeSequenceTable(fileName,
+                DrawTimeSequence.drawTotalTimeSequenceTable(fileName,
                         this.divisionResult.get(i));
             }
         } else {
@@ -345,7 +346,7 @@ public class ProblemOne extends Problem {
                 }
 
                 String fileName = "resources/unmerge/" + fileNameSet[i] + ".png";
-                DrawTimeSequence.drawTimeSequenceTable(fileName,
+                DrawTimeSequence.drawTotalTimeSequenceTable(fileName,
                         this.divisionResult.get(i));
             }
         }
@@ -422,19 +423,16 @@ public class ProblemOne extends Problem {
 
         Iterator<FlightRecord> iterator = flightRecordTreeSet.iterator();
 
-        int index = 0;
 
         while (iterator.hasNext()) {
 
             FlightRecord flightRecord = iterator.next();
 
-            System.out.print(index);
-            index++;
 
             decideCurrentFlightRecordBelongs(flightRecord);
         }
 
-        System.out.println("haha");
+        drawGatesTimeSequenceImage();
     }
 
     private void decideCurrentFlightRecordBelongs(FlightRecord flightRecord) {
@@ -464,7 +462,7 @@ public class ProblemOne extends Problem {
             } else {
                 int lastFlightLeftTime =
                         currentGate.getLast().getLeftTime();
-                if ( lastFlightLeftTime + 75 <= leftTime ) {
+                if (lastFlightLeftTime + 75 <= leftTime) {
                     int existingFlightNumbers = currentGate.size();
                     if (existingFlightNumbers > maxExistingFlightNumbers) {
                         maxExistingFlightNumbers = existingFlightNumbers;
@@ -519,14 +517,38 @@ public class ProblemOne extends Problem {
         return result;
     }
 
+    private void drawGatesTimeSequenceImage() {
+
+        String[] gatesType = {"IIW", "IIN", "IDW", "IDN",
+                "DIW", "DIN", "DDW", "DDN"};
+
+        for (int i = 0; i < this.gate.size(); i++) {
+
+            ArrayList<LinkedList<FlightRecord>> currentTypeGates
+                    = this.gate.get(i);
+
+            for (int j = 0; j < currentTypeGates.size(); j++) {
+
+                LinkedList<FlightRecord> currentGate = currentTypeGates.get(j);
+                if (currentGate.isEmpty()) {
+                    continue;
+                }
+
+                String filename = "resources\\image\\" + gatesType[i] + "_" + String.valueOf(j)
+                        + ".png";
+
+                DrawTimeSequence.drawTimeSequenceImageOfASingleGate(
+                        filename, currentGate);
+            }
+        }
+    }
+
     // Below is for test
     public static void main(String[] args) {
 
         ProblemOne problemOne = new ProblemOne();
 
         problemOne.getResultWithQueueMethod();
-
-        problemOne.showResultInPNGForm();
 
         System.out.println("haha");
     }

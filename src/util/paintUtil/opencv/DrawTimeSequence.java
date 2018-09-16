@@ -8,6 +8,7 @@ import org.opencv.imgproc.Imgproc;
 import problem.component.FlightRecord;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.opencv.core.Mat;
 
@@ -19,12 +20,12 @@ public class DrawTimeSequence {
         System.load(dllPath);
     }
 
-    public static void drawTimeSequenceTable(
+    public static void drawTotalTimeSequenceTable(
             String filename,
             ArrayList<ArrayList<FlightRecord>> divisionResult) {
 
         Mat resultMat = new Mat(divisionResult.size() * 20, 1440,
-                CvType.CV_8UC3, new Scalar(0,0,0));
+                CvType.CV_8UC3, new Scalar(0, 0, 0));
 
         int startTime = 20 * 24 * 60;
         int endTime = 21 * 24 * 60;
@@ -40,23 +41,61 @@ public class DrawTimeSequence {
 
                 int arrivalTime = divisionResult.get(i).get(j).getArrivalTime();
                 int leftTime = divisionResult.get(i).get(j).getLeftTime();
-                arrivalTime = (arrivalTime < startTime ? startTime: arrivalTime);
-                leftTime = (leftTime > endTime ? endTime: leftTime);
+                arrivalTime = (arrivalTime < startTime ? startTime : arrivalTime);
+                leftTime = (leftTime > endTime ? endTime : leftTime);
 
                 pt1.x = arrivalTime - startTime;
                 pt2.x = leftTime - startTime;
 
-                Imgproc.rectangle(resultMat, pt1, pt2, new Scalar(255,255,255), -1);
+                Imgproc.rectangle(resultMat, pt1, pt2, new Scalar(255, 255, 255), -1);
 
                 pt1.x = pt2.x;
                 pt2.x += 45;
 
-                Imgproc.rectangle(resultMat, pt1, pt2, new Scalar(0,0,255), -1);
+                Imgproc.rectangle(resultMat, pt1, pt2, new Scalar(0, 0, 255), -1);
             }
         }
 
         Imgcodecs.imwrite(filename, resultMat);
 
-        System.out.println("Draw Rectangle Completed!");
+        //System.out.println("Draw Rectangle Completed!");
+    }
+
+    public static void drawTimeSequenceImageOfASingleGate(
+            String filename, List<FlightRecord> gate) {
+
+        Mat resultMat = new Mat(gate.size() * 20 + 10, 1440,
+                CvType.CV_8UC3, new Scalar(0, 0, 0));
+
+        int startTime = 20 * 24 * 60;
+        int endTime = 21 * 24 * 60;
+
+        for (int i = 0; i < gate.size(); i++) {
+
+            Point pt1 = new Point();
+            Point pt2 = new Point();
+            pt1.y = i * 20 + 10;
+            pt2.y = (i + 1) * 20;
+
+            FlightRecord flightRecord = gate.get(i);
+            int arrivalTime = flightRecord.getArrivalTime();
+            int leftTime = flightRecord.getLeftTime();
+            arrivalTime = (arrivalTime < startTime ? startTime : arrivalTime);
+            leftTime = (leftTime > endTime ? endTime : leftTime);
+
+            pt1.x = arrivalTime - startTime;
+            pt2.x = leftTime - startTime;
+
+            Imgproc.rectangle(resultMat, pt1, pt2,
+                    new Scalar(255, 255, 255), -1);
+
+            pt1.x = pt2.x - 1;
+            pt2.x += 74;
+
+            Imgproc.rectangle(resultMat, pt1, pt2,
+                    new Scalar(0, 0, 255), -1);
+        }
+
+        Imgcodecs.imwrite(filename, resultMat);
     }
 }
