@@ -4,9 +4,7 @@ import problem.Problem;
 import problem.component.FlightRecord;
 import util.ioUtil.txt.TxtWriter;
 
-import javax.swing.tree.TreeCellRenderer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeSet;
 
 public class ProblemOne extends Problem {
@@ -19,8 +17,13 @@ public class ProblemOne extends Problem {
     private TreeSet<FlightRecord> IDW = new TreeSet<>();
     private TreeSet<FlightRecord> IIN = new TreeSet<>();
     private TreeSet<FlightRecord> IIW = new TreeSet<>();
+    private ArrayList<TreeSet<FlightRecord>> treeSetArrayList
+            = new ArrayList<>();
 
-    private void generateFlightRecordMap() {
+    private ArrayList<ArrayList<ArrayList<FlightRecord>>> divisionResult
+            = new ArrayList<>();
+
+    private void generateFlightRecordSets() {
 
 
         for (FlightRecord flightRecord : this.flightRecordArrayList) {
@@ -72,6 +75,15 @@ public class ProblemOne extends Problem {
                 }
             }
         }
+
+        this.treeSetArrayList.add(this.DDN);
+        this.treeSetArrayList.add(this.DDW);
+        this.treeSetArrayList.add(this.DIN);
+        this.treeSetArrayList.add(this.DIW);
+        this.treeSetArrayList.add(this.IDN);
+        this.treeSetArrayList.add(this.IDW);
+        this.treeSetArrayList.add(this.IIN);
+        this.treeSetArrayList.add(this.IIW);
     }
 
     private void generateTxtFilesOfEightTreeSets() {
@@ -95,8 +107,29 @@ public class ProblemOne extends Problem {
         TxtWriter.writeTxtFile("resources/IIW.txt", IIW);
     }
 
-    private void divideByGreedyMethod(TreeSet<FlightRecord> treeSet,
-                                      ArrayList<ArrayList<FlightRecord>> divisionResult) {
+    private void divideByGreedyMethod(
+            ArrayList<TreeSet<FlightRecord>> treeSetArrayList,
+            ArrayList<ArrayList<ArrayList<FlightRecord>>> divisionResult) {
+
+        if (!divisionResult.isEmpty()) {
+            divisionResult.clear();
+        }
+
+        for (TreeSet<FlightRecord> flightRecordTreeSet : treeSetArrayList) {
+
+            ArrayList<ArrayList<FlightRecord>> divisionResultOfCurrentTreeSet
+                    = new ArrayList<>();
+
+            divideByGreedyMethodHelper(flightRecordTreeSet,
+                    divisionResultOfCurrentTreeSet);
+
+            divisionResult.add(divisionResultOfCurrentTreeSet);
+        }
+    }
+
+    private void divideByGreedyMethodHelper(
+            TreeSet<FlightRecord> treeSet,
+            ArrayList<ArrayList<FlightRecord>> divisionResult) {
 
         if (!divisionResult.isEmpty()) {
             divisionResult.clear();
@@ -108,11 +141,8 @@ public class ProblemOne extends Problem {
 
         for (int i = 0; i < flightRecordArrayList.size(); i++) {
 
-            while (popFlag[i] && i < flightRecordArrayList.size()) {
+            while (i < flightRecordArrayList.size() && popFlag[i]) {
                 i++;
-                if (i==flightRecordArrayList.size()) {
-                    break;
-                }
             }
 
             if (i == flightRecordArrayList.size()) {
@@ -125,7 +155,7 @@ public class ProblemOne extends Problem {
 
             int leftTime = flightRecordArrayList.get(i).getLeftTime();
             int j = i;
-            while (j < flightRecordArrayList.size() ) {
+            while (j < flightRecordArrayList.size()) {
 
                 if (popFlag[j]) {
                     j++;
@@ -145,8 +175,6 @@ public class ProblemOne extends Problem {
 
             divisionResult.add(currentFlightRecord);
         }
-
-        System.out.println("haha");
     }
 
     // Below is for test
@@ -155,12 +183,13 @@ public class ProblemOne extends Problem {
         ProblemOne problemOne = new ProblemOne();
         problemOne.getFlightRecordArrayListFromExcel();
 
-        problemOne.generateFlightRecordMap();
+        problemOne.generateFlightRecordSets();
 
         //problemOne.generateTxtFilesOfEightTreeSets();
 
-        ArrayList<ArrayList<FlightRecord>> DIWResult = new ArrayList<>();
-        problemOne.divideByGreedyMethod(problemOne.DIW, DIWResult);
+        problemOne.divideByGreedyMethod(
+                problemOne.treeSetArrayList,
+                problemOne.divisionResult);
 
         System.out.println("haha");
     }
