@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class excelReader {
+public class ExcelReader {
 
     /**
      * @param filename             must end up with ".xls" not "xlsx"
@@ -107,12 +107,12 @@ public class excelReader {
         ArrayList<ArrayList<String>> result1 = new ArrayList<>();
         ArrayList<ArrayList<String>> result2 = new ArrayList<>();
 
-        excelReader.importXlsFile(
+        ExcelReader.importXlsFile(
                 filename, 0, true,
                 0, -1, 0, -1,
                 result1);
 
-        excelReader.importXlsFile(
+        ExcelReader.importXlsFile(
                 filename, 0, false,
                 0, -1, 0, -1,
                 result2);

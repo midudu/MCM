@@ -1,12 +1,13 @@
-package problem;
+package problem.auxiliaryProblems;
 
-import util.ioUtil.excel.excelReader;
-import util.ioUtil.excel.excelWriter;
+import problem.Problem;
+import util.ioUtil.excel.ExcelReader;
+import util.ioUtil.excel.ExcelWriter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TempProblem extends Problem {
+public class ExtendTicketsSheet extends Problem {
 
     private ArrayList<ArrayList<String>> originalPucksData
             = new ArrayList<>();
@@ -40,13 +41,13 @@ public class TempProblem extends Problem {
 
     private void readOriginalData() {
 
-        excelReader.importXlsFile(
+        ExcelReader.importXlsFile(
                 "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
                 0, true,
                 1, 243,
                 0, -1, originalPucksData);
 
-        excelReader.importXlsFile(
+        ExcelReader.importXlsFile(
                 "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
                 1, true,
                 1, 1734,
@@ -293,13 +294,13 @@ public class TempProblem extends Problem {
 
     private void exportAdditionalRecordToExcel() {
 
-        excelWriter.exportXlsFile("additional.xls",
+        ExcelWriter.exportXlsFile("additional.xls",
                 this.addtionalRecord,0,null,0,0);
     }
 
     public static void main(String[] args) {
 
-        TempProblem problem = new TempProblem();
+        ExtendTicketsSheet problem = new ExtendTicketsSheet();
 
         problem.dealTickets();
     }

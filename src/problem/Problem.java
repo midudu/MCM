@@ -2,7 +2,7 @@ package problem;
 
 import problem.component.FlightRecord;
 import problem.component.GatesInformation;
-import util.ioUtil.excel.excelReader;
+import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class Problem {
         ArrayList<ArrayList<String>> originalData
                 = new ArrayList<>();
 
-        excelReader.importXlsFile(
+        ExcelReader.importXlsFile(
                 "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
                 0, true,
                 1, 243,
@@ -65,7 +65,7 @@ public class Problem {
         ArrayList<ArrayList<String>> originalData
                 = new ArrayList<>();
 
-        excelReader.importXlsFile(
+        ExcelReader.importXlsFile(
                 "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
                 2, true,
                 1, 70,
@@ -111,7 +111,7 @@ public class Problem {
         ArrayList<ArrayList<String>> originalData
                 = new ArrayList<>();
 
-        excelReader.importXlsFile(
+        ExcelReader.importXlsFile(
                 "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
                 0, true,
                 1, 243,
