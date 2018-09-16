@@ -8,6 +8,7 @@ import util.paintUtil.opencv.DrawTimeSequence;
 
 import java.util.*;
 
+
 public class ProblemOne extends Problem {
 
     private TreeSet<FlightRecord> DDN = new TreeSet<>();
@@ -385,7 +386,7 @@ public class ProblemOne extends Problem {
         }
 
         ArrayList<LinkedList<FlightRecord>> DIN = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             LinkedList<FlightRecord> queue = new LinkedList<>();
             DIN.add(queue);
         }
@@ -397,7 +398,7 @@ public class ProblemOne extends Problem {
         }
 
         ArrayList<LinkedList<FlightRecord>> IDN = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             LinkedList<FlightRecord> queue = new LinkedList<>();
             IDN.add(queue);
         }
@@ -472,13 +473,16 @@ public class ProblemOne extends Problem {
             }
         }
 
-        /*if (gateIndex == -1) {
-            throw new RuntimeException();
-        }*/
 
         if (gateIndex == -1) {
             this.conflictCount++;
             this.conflictRecord.add(flightRecord);
+
+            String filename ="resources\\image\\conflict\\" + arrivalType + leftType + planeType
+                    + "_" + String.valueOf(conflictCount) + ".png";
+
+            DrawTimeSequence.drawTimeSequenceImageOfConflictSituation(
+                    filename, currentTypeGates, flightRecord);
 
         } else {
             currentTypeGates.get(gateIndex).add(flightRecord);
@@ -534,7 +538,7 @@ public class ProblemOne extends Problem {
                     continue;
                 }
 
-                String filename = "resources\\image\\" + gatesType[i] + "_" + String.valueOf(j)
+                String filename = "resources\\image\\gate\\" + gatesType[i] + "_" + String.valueOf(j)
                         + ".png";
 
                 DrawTimeSequence.drawTimeSequenceImageOfASingleGate(
