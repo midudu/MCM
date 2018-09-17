@@ -3,6 +3,7 @@ package problem.problemOne;
 import problem.Problem;
 import problem.component.FlightRecord;
 import problem.component.GatesInformation;
+import util.ioUtil.excel.ExcelWriter;
 import util.ioUtil.txt.TxtWriter;
 import util.paintUtil.opencv.DrawTimeSequence;
 
@@ -433,7 +434,7 @@ public class ProblemOne extends Problem {
             decideCurrentFlightRecordBelongs(flightRecord);
         }
 
-        drawGatesTimeSequenceImage();
+        //drawGatesTimeSequenceImage();
     }
 
     private void decideCurrentFlightRecordBelongs(FlightRecord flightRecord) {
@@ -478,11 +479,11 @@ public class ProblemOne extends Problem {
             this.conflictCount++;
             this.conflictRecord.add(flightRecord);
 
-            String filename ="resources\\image\\conflict\\" + arrivalType + leftType + planeType
+            /*String filename ="resources\\image\\conflict\\" + arrivalType + leftType + planeType
                     + "_" + String.valueOf(conflictCount) + ".png";
 
             DrawTimeSequence.drawTimeSequenceImageOfConflictSituation(
-                    filename, currentTypeGates, flightRecord);
+                    filename, currentTypeGates, flightRecord);*/
 
         } else {
             currentTypeGates.get(gateIndex).add(flightRecord);
@@ -547,12 +548,90 @@ public class ProblemOne extends Problem {
         }
     }
 
+    private void printFinalResultToExcel() {
+
+        ArrayList<ArrayList<String>> finalResult
+                = new ArrayList<>();
+
+        HashMap<Integer, String> hashMap = new HashMap<>();
+        hashMap.put(0,"IIW");
+        hashMap.put(1,"IIN");
+        hashMap.put(2,"IDW");
+        hashMap.put(3,"IDN");
+        hashMap.put(4,"DIW");
+        hashMap.put(5,"DIN");
+        hashMap.put(6,"DDW");
+        hashMap.put(7,"DDN");
+
+        for (int i = 0; i < this.gate.size(); i++) {
+
+            ArrayList<String> gatesType = new ArrayList<>();
+            gatesType.add(hashMap.get(i));
+            finalResult.add(gatesType);
+
+            ArrayList<LinkedList<FlightRecord>> currentTypeOfGates
+                    = this.gate.get(i);
+
+            for (int j = 0; j < currentTypeOfGates.size(); j++) {
+
+                LinkedList<FlightRecord> currentGate
+                        = currentTypeOfGates.get(j);
+
+                if (currentGate.isEmpty()) {
+                    continue;
+                }
+
+                ArrayList<String> currentGateFlights = new ArrayList<>();
+
+                for (int k = 0; k < currentGate.size(); k++) {
+
+                    int currentFlightId = currentGate.get(k).getId();
+                    currentGateFlights.add(String.valueOf(currentFlightId));
+                }
+
+                finalResult.add(currentGateFlights);
+            }
+        }
+
+        ExcelWriter.exportXlsFile("resultOfProblemOne.xls",
+                finalResult,
+                0,null,0,0);
+    }
+
+    private void printConflictResultToExcel() {
+
+        ArrayList<ArrayList<String>> conflictRecordString
+                = new ArrayList<>();
+
+        Iterator<FlightRecord> iterator
+                = this.conflictRecord.iterator();
+        while (iterator.hasNext()) {
+
+            FlightRecord currentConflictRecord
+                    = iterator.next();
+
+            ArrayList<String> arrayList = new ArrayList<>();
+            arrayList.add(String.valueOf(currentConflictRecord.getId()));
+
+            conflictRecordString.add(arrayList);
+        }
+
+
+        ExcelWriter.exportXlsFile("conflictRecordOfProblemOne.xls",
+                conflictRecordString,
+                0,null,0,0);
+    }
+
     // Below is for test
     public static void main(String[] args) {
 
         ProblemOne problemOne = new ProblemOne();
 
         problemOne.getResultWithQueueMethod();
+
+        problemOne.printFinalResultToExcel();
+
+        problemOne.printConflictResultToExcel();
 
         System.out.println("haha");
     }

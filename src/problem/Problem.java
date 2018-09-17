@@ -28,33 +28,27 @@ public class Problem {
 
         for (int i = 0; i < originalData.size(); i++) {
 
-            /*String arrivalDate = originalData.get(i).get(0);
-            String arrivalTime = originalData.get(i).get(1);*/
             String arrivalDate = originalData.get(i).get(9).split(" +")[0];
             String arrivalTime = originalData.get(i).get(9).split(" +")[1];
-            /*if (originalData.get(i).get(9).split(" ").length !=2) {
-                throw new RuntimeException();
-            }*/
 
             String arrivalFlightName = originalData.get(i).get(2);
             String arrivalType = originalData.get(i).get(3);
             String planeType = originalData.get(i).get(4);
-            /*String leftDate = originalData.get(i).get(5);
-            String leftTime = originalData.get(i).get(6);*/
+
             String leftDate = originalData.get(i).get(10).split(" +")[0];
             String leftTime = originalData.get(i).get(10).split(" +")[1];
-            /*if (originalData.get(i).get(10).split(" ").length !=2) {
-                throw new RuntimeException();
-            }*/
+
             String leftFlightName = originalData.get(i).get(7);
             String leftType = originalData.get(i).get(8);
+
+            int id = Integer.valueOf(originalData.get(i).get(14));
 
             int arrival = convertDateToMinute(arrivalDate)
                     + convertTimeToMinute(arrivalTime);
             int left = convertDateToMinute(leftDate)
                     + convertTimeToMinute(leftTime);
 
-            FlightRecord flightRecord = new FlightRecord(i, arrival, left,
+            FlightRecord flightRecord = new FlightRecord(id, arrival, left,
                     arrivalFlightName, leftFlightName, arrivalType, leftType, planeType);
             this.flightRecordArrayList.add(flightRecord);
         }

@@ -95,9 +95,9 @@ public class IrrelativeDataElimination extends Problem {
     public void eliminateFlightsOfFixedStationInTicketAndPucksSheet() {
 
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
-                3, true,
-                1, 1257,
+                "E:\\Java_Projects\\MCM\\compressedTickets.xls",
+                0, true,
+                1, 659,
                 6, 14, this.originalTicketsAndPucksData);
 
         for (int i = 0; i < this.originalTicketsAndPucksData.size(); i++) {
