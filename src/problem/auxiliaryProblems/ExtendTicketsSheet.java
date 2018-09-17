@@ -20,7 +20,7 @@ public class ExtendTicketsSheet extends Problem {
     private HashMap<String, String> leftFlightNameToIndexString
             = new HashMap<>();
 
-    private ArrayList<ArrayList<String>> addtionalRecord
+    private ArrayList<ArrayList<String>> additionalRecord
             = new ArrayList<>();
 
     private void dealTickets() {
@@ -113,7 +113,7 @@ public class ExtendTicketsSheet extends Problem {
             findRecordAccordingToLeftFlightName(
                     currentAdditionalRecord, leftFlightName, i);
 
-            this.addtionalRecord.add(currentAdditionalRecord);
+            this.additionalRecord.add(currentAdditionalRecord);
         }
     }
 
@@ -154,6 +154,20 @@ public class ExtendTicketsSheet extends Problem {
 
             } else {
                 index = Integer.valueOf(indexString);
+
+                int arrivalDate = getDateOfOriginalTicketsData(
+                        originalTicketsDataIndex, 3);
+
+                int arrivalDateOfIndex = getArrivalDate(index);
+
+                if (arrivalDate != arrivalDateOfIndex) {
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    return;
+                }
             }
 
             currentAdditionalRecord.add(
@@ -161,11 +175,14 @@ public class ExtendTicketsSheet extends Problem {
             currentAdditionalRecord.add(
                     this.originalPucksData.get(index).get(4));
             currentAdditionalRecord.add(
+                    this.originalPucksData.get(index).get(8));
+            currentAdditionalRecord.add(
                     this.originalPucksData.get(index).get(9));
             currentAdditionalRecord.add(
                     this.originalPucksData.get(index).get(10));
 
         } else {
+            currentAdditionalRecord.add("");
             currentAdditionalRecord.add("");
             currentAdditionalRecord.add("");
             currentAdditionalRecord.add("");
@@ -210,18 +227,35 @@ public class ExtendTicketsSheet extends Problem {
 
             } else {
                 index = Integer.valueOf(indexString);
+
+                int leftDate = getDateOfOriginalTicketsData(
+                        originalTicketsDataIndex, 5);
+
+                int leftDateOfIndex = getLeftDate(index);
+
+                if (leftDate != leftDateOfIndex) {
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    currentAdditionalRecord.add("");
+                    return;
+                }
             }
 
             currentAdditionalRecord.add(
-                    this.originalPucksData.get(index).get(8));
+                    this.originalPucksData.get(index).get(3));
             currentAdditionalRecord.add(
                     this.originalPucksData.get(index).get(4));
+            currentAdditionalRecord.add(
+                    this.originalPucksData.get(index).get(8));
             currentAdditionalRecord.add(
                     this.originalPucksData.get(index).get(9));
             currentAdditionalRecord.add(
                     this.originalPucksData.get(index).get(10));
 
         } else {
+            currentAdditionalRecord.add("");
             currentAdditionalRecord.add("");
             currentAdditionalRecord.add("");
             currentAdditionalRecord.add("");
@@ -295,7 +329,7 @@ public class ExtendTicketsSheet extends Problem {
     private void exportAdditionalRecordToExcel() {
 
         ExcelWriter.exportXlsFile("additional.xls",
-                this.addtionalRecord,0,null,0,0);
+                this.additionalRecord,0,null,0,0);
     }
 
     public static void main(String[] args) {
