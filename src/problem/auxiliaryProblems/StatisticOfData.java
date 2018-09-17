@@ -15,10 +15,10 @@ public class StatisticOfData extends Problem {
                 = new ArrayList<>();
 
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\usefulTickets.xls",
-                1, true,
-                1, 573,
-                1, 2, originalTicketsData);
+                "E:\\Java_Projects\\MCM\\usefulTicketsForProgram.xls",
+                0, true,
+                1, 659,
+                0, 2, originalTicketsData);
 
         int totalNumbers = 0;
 

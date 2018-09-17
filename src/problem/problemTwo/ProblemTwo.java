@@ -1,16 +1,10 @@
 package problem.problemTwo;
 
 import problem.Problem;
-import problem.component.FlightRecord;
-import problem.component.FlightRecordWithStationType;
-import problem.component.Gate;
-import problem.component.PassengerRecord;
+import problem.component.*;
 import util.ioUtil.excel.ExcelReader;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.TreeSet;
+import java.util.*;
 
 public class ProblemTwo extends Problem {
 
@@ -32,6 +26,7 @@ public class ProblemTwo extends Problem {
     private TreeSet<FlightRecord> NUType = new TreeSet<>();
 
     private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
+
     {
         gatesTypeIndex.put("IIWT", 0);
         gatesTypeIndex.put("IIWS", 1);
@@ -52,6 +47,41 @@ public class ProblemTwo extends Problem {
     }
 
     private ArrayList<ArrayList<Gate>> gatesSet = new ArrayList<>();
+
+    private ArrayList<ArrayList<Gate>> gatesSetOfMinimumTime;
+
+    private SolutionVector solutionVectorOfTOrS
+            = new SolutionVector(flightRecordArray.length - 1);
+
+    private SolutionVector bestSolutionVectorOfTOrS;
+
+    protected ArrayList<ArrayList<Gate>> cloneGatesSet(
+            ArrayList<ArrayList<Gate>> gatesSet) {
+
+        ArrayList<ArrayList<Gate>> result = new ArrayList<>();
+
+        for (int i = 0; i < gatesSet.size(); i++) {
+
+            ArrayList<Gate> newGateArrayList = new ArrayList<>();
+
+            ArrayList<Gate> currentGateArrayList = gatesSet.get(i);
+
+            for (int j = 0; j < currentGateArrayList.size(); j++) {
+
+                Gate currentGate = currentGateArrayList.get(j);
+                Gate newGate = new Gate(
+                        currentGate.getId(), currentGate.getHallType(),
+                        currentGate.getLocation(), currentGate.getArrivalType(),
+                        currentGate.getLeftType(), currentGate.getPlaneType());
+
+                newGateArrayList.add(newGate);
+            }
+
+            result.add(newGateArrayList);
+        }
+
+        return result;
+    }
 
     protected void readOriginalData(
             ArrayList<ArrayList<String>> originalPucksData,
@@ -247,7 +277,7 @@ public class ProblemTwo extends Problem {
             } else {
                 if (arrivalType.length() == 1) {
                     leftType = (arrivalType.equals("D") ? "I" : "D");
-                } else  {
+                } else {
                     arrivalType = (leftType.equals("D") ? "I" : "D");
                 }
             }
@@ -309,7 +339,7 @@ public class ProblemTwo extends Problem {
         }
     }
 
-    private void mainProcess() {
+    protected void initialization() {
 
         ArrayList<ArrayList<String>> originalPucksData
                 = new ArrayList<>();
@@ -324,15 +354,108 @@ public class ProblemTwo extends Problem {
 
         initFlightRecordTreeSets();
         initGatesSet();
+    }
+
+    protected void initializeSolutionVector(SolutionVector solutionVector) {
+
+        //algjal
+    }
+
+    protected void adjustCurrentSolutionVector() {
+
+        //afjgflaj
+    }
+
+    protected int calculateTotalTimeOfPassengersProcedure() {
+
+        //fjaklgfalg
+        return -1;
+    }
+
+    protected void simulatedAnnealing() {
+
+        double originalTemperature = 97.0;
+        double finalTemperature = 3.0;
+        double descendingCoefficient = 0.95;
+        int MarkovLength = 100;
+        double temperatureCoefficient = 2.0;
+        int minTotalTime = -1;
+
+        initializeSolutionVector(this.solutionVectorOfTOrS);
+
+        double temperature = originalTemperature;
+
+        while (temperature > finalTemperature) {
+
+            for (int i = 0; i < MarkovLength; i++) {
+
+                adjustCurrentSolutionVector();
+
+                int totalTime = calculateTotalTimeOfPassengersProcedure();
+
+                if (minTotalTime == -1) {
+                    this.gatesSetOfMinimumTime = cloneGatesSet(this.gatesSet);
+
+                    this.bestSolutionVectorOfTOrS
+                            = this.solutionVectorOfTOrS.cloneSolutionVector();
+
+                    minTotalTime = totalTime;
+                } else {
+
+                    if (totalTime < minTotalTime) {
+                        this.gatesSetOfMinimumTime = cloneGatesSet(this.gatesSet);
+
+                        this.bestSolutionVectorOfTOrS
+                                = this.solutionVectorOfTOrS.cloneSolutionVector();
+
+                        minTotalTime = totalTime;
+                    } else {
+
+                        double randomValue = new Random().nextDouble();
+                        double calculatedValue
+                                = Math.exp((minTotalTime - totalTime)
+                                * temperatureCoefficient / temperature);
+
+                        if (randomValue < calculatedValue) {
+                            this.gatesSetOfMinimumTime = cloneGatesSet(this.gatesSet);
+
+                            this.bestSolutionVectorOfTOrS
+                                    = this.solutionVectorOfTOrS.cloneSolutionVector();
+
+                            minTotalTime = totalTime;
+                        }
+                    }
+                }
+
+                generateNewSolutionVector();
+            }
+
+            temperature *= descendingCoefficient;
+        }
+    }
+
+
+    private void mainProcess() {
+
+        initialization();
 
         System.out.println("haha");
     }
 
     public static void main(String[] args) {
 
-        ProblemTwo problemTwo = new ProblemTwo();
+        /*ProblemTwo problemTwo = new ProblemTwo();
 
-        problemTwo.mainProcess();
+        problemTwo.mainProcess();*/
 
+        ArrayList<Integer> arrayList1 = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            arrayList1.add(i);
+        }
+
+        ArrayList<Integer> arrayList2 = new ArrayList<>(arrayList1);
+        arrayList1.set(4, 10);
+
+        System.out.println(arrayList2.toString());
     }
 }
