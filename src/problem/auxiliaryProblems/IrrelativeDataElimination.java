@@ -5,9 +5,10 @@ import util.ioUtil.excel.ExcelReader;
 import util.ioUtil.excel.ExcelWriter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
-public class IrrelativePucksDataElimination extends Problem {
+public class IrrelativeDataElimination extends Problem {
 
     private ArrayList<ArrayList<String>> originalPucksData
             = new ArrayList<>();
@@ -22,7 +23,19 @@ public class IrrelativePucksDataElimination extends Problem {
     private ArrayList<ArrayList<String>> processedPucksData
             = new ArrayList<>();
 
-    private void eliminateFlightsWithoutPassengers() {
+    private HashMap<String, String> TSType = new HashMap<>();
+    {
+        TSType.put("IIW", "T/S");
+        TSType.put("DDW", "S");
+        TSType.put("IDW", "T");
+        TSType.put("DIW", "T");
+        TSType.put("IIN", "T/S");
+        TSType.put("DDN", "T/S");
+        TSType.put("IDN", "T");
+        TSType.put("DIN", "T");
+    }
+
+    public void eliminateFlightsWithoutPassengers() {
 
         readOriginalData();
 
@@ -32,7 +45,43 @@ public class IrrelativePucksDataElimination extends Problem {
 
         ExcelWriter.exportXlsFile("relativePucks.xls",
                 this.processedPucksData,
-                0,null,0,0);
+                0, null, 0, 0);
+
+        System.out.println("haha");
+    }
+
+    public void eliminateFlightsOfFixedStationInPucksSheet() {
+
+        ExcelReader.importXlsFile(
+                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
+                0, true,
+                1, 243,
+                0, 9, this.originalPucksData);
+
+        for (int i = 0; i < this.originalPucksData.size(); i++) {
+
+            ArrayList<String> currentRecord = this.originalPucksData.get(i);
+
+            String arrivalFlightType = currentRecord.get(3);
+            String leftFlightType = currentRecord.get(8);
+            String planeType = currentRecord.get(4);
+
+            String key = arrivalFlightType + leftFlightType + planeType;
+            if (key.length() != 3) {
+                throw new RuntimeException();
+            }
+            if (!this.TSType.containsKey(key)) {
+                throw new RuntimeException();
+            }
+
+            currentRecord.add(this.TSType.get(key));
+
+            this.processedPucksData.add(currentRecord);
+        }
+
+        ExcelWriter.exportXlsFile("fixedStationPucks.xls",
+                this.processedPucksData,
+                0, null, 0, 0);
 
         System.out.println("haha");
     }
@@ -88,10 +137,10 @@ public class IrrelativePucksDataElimination extends Problem {
 
     public static void main(String[] args) {
 
-        IrrelativePucksDataElimination helper
-                = new IrrelativePucksDataElimination();
+        IrrelativeDataElimination helper
+                = new IrrelativeDataElimination();
 
-        helper.eliminateFlightsWithoutPassengers();
+        helper.eliminateFlightsOfFixedStationInPucksSheet();
 
     }
 }
