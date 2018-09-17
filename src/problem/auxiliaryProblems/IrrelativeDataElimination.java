@@ -35,7 +35,13 @@ public class IrrelativeDataElimination extends Problem {
         TSType.put("DIN", "T");
     }
 
-    public void eliminateFlightsWithoutPassengers() {
+    private ArrayList<ArrayList<String>> originalTicketsAndPucksData
+            = new ArrayList<>();
+
+    private ArrayList<ArrayList<String>> processedTicketsAndPucksData
+            = new ArrayList<>();
+
+    public void eliminateFlightsWithoutPassengersInPucksSheet() {
 
         readOriginalData();
 
@@ -81,6 +87,55 @@ public class IrrelativeDataElimination extends Problem {
 
         ExcelWriter.exportXlsFile("fixedStationPucks.xls",
                 this.processedPucksData,
+                0, null, 0, 0);
+
+        System.out.println("haha");
+    }
+
+    public void eliminateFlightsOfFixedStationInTicketAndPucksSheet() {
+
+        ExcelReader.importXlsFile(
+                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
+                3, true,
+                1, 1257,
+                6, 14, this.originalTicketsAndPucksData);
+
+        for (int i = 0; i < this.originalTicketsAndPucksData.size(); i++) {
+
+            ArrayList<String> currentRecord = this.originalTicketsAndPucksData.get(i);
+
+            String arrivalFlightArrivalType = currentRecord.get(0);
+            String arrivalFlightLeftType = currentRecord.get(2);
+            String arrivalPlaneType = currentRecord.get(1);
+            String arrivalKey = arrivalFlightArrivalType
+                    + arrivalFlightLeftType + arrivalPlaneType;
+            if (arrivalKey.length() != 3) {
+                throw new RuntimeException();
+            }
+            if (!this.TSType.containsKey(arrivalKey)) {
+                throw new RuntimeException();
+            }
+
+            String leftFlightArrivalType = currentRecord.get(5);
+            String leftFlightLeftType = currentRecord.get(7);
+            String leftPlaneType = currentRecord.get(6);
+            String leftKey = leftFlightArrivalType
+                    + leftFlightLeftType + leftPlaneType;
+            if (leftKey.length() != 3) {
+                throw new RuntimeException();
+            }
+            if (!this.TSType.containsKey(leftKey)) {
+                throw new RuntimeException();
+            }
+
+            currentRecord.add(this.TSType.get(arrivalKey));
+            currentRecord.add(this.TSType.get(leftKey));
+
+            this.processedTicketsAndPucksData.add(currentRecord);
+        }
+
+        ExcelWriter.exportXlsFile("fixedStationTicketsAndPucks.xls",
+                this.processedTicketsAndPucksData,
                 0, null, 0, 0);
 
         System.out.println("haha");
@@ -140,7 +195,7 @@ public class IrrelativeDataElimination extends Problem {
         IrrelativeDataElimination helper
                 = new IrrelativeDataElimination();
 
-        helper.eliminateFlightsOfFixedStationInPucksSheet();
+        helper.eliminateFlightsOfFixedStationInTicketAndPucksSheet();
 
     }
 }
