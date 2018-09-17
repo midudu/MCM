@@ -55,4 +55,8 @@ public class Gate {
     public String getPlaneType() {
         return planeType;
     }
+
+    public LinkedList<FlightRecordWithStationType> getFlightRecords() {
+        return flightRecords;
+    }
 }

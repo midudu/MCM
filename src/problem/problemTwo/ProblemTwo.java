@@ -3,10 +3,13 @@ package problem.problemTwo;
 import problem.Problem;
 import problem.component.FlightRecord;
 import problem.component.FlightRecordWithStationType;
+import problem.component.Gate;
 import problem.component.PassengerRecord;
 import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.TreeSet;
 
 public class ProblemTwo extends Problem {
@@ -15,21 +18,49 @@ public class ProblemTwo extends Problem {
             = new ArrayList<>();
     protected ArrayList<PassengerRecord> passengerRecordArrayList
             = new ArrayList<>();
+    protected ArrayList<Gate> gatesArrayList
+            = new ArrayList<>();
 
     protected FlightRecordWithStationType[] flightRecordArray
             = new FlightRecordWithStationType[243];
+
+    protected Gate[] gatesArray = new Gate[70];
 
     private TreeSet<FlightRecord> RTType = new TreeSet<>();
     private TreeSet<FlightRecord> RUType = new TreeSet<>();
     private TreeSet<FlightRecord> NTType = new TreeSet<>();
     private TreeSet<FlightRecord> NUType = new TreeSet<>();
 
+    private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
+    {
+        gatesTypeIndex.put("IIWT", 0);
+        gatesTypeIndex.put("IIWS", 1);
+        gatesTypeIndex.put("IINT", 2);
+        gatesTypeIndex.put("IINS", 3);
+        gatesTypeIndex.put("IDWT", 4);
+        gatesTypeIndex.put("IDWS", 5);
+        gatesTypeIndex.put("IDNT", 6);
+        gatesTypeIndex.put("IDNS", 7);
+        gatesTypeIndex.put("DIWT", 8);
+        gatesTypeIndex.put("DIWS", 9);
+        gatesTypeIndex.put("DINT", 10);
+        gatesTypeIndex.put("DINS", 11);
+        gatesTypeIndex.put("DDWT", 12);
+        gatesTypeIndex.put("DDWS", 13);
+        gatesTypeIndex.put("DDNT", 14);
+        gatesTypeIndex.put("DDNS", 15);
+    }
+
+    private ArrayList<ArrayList<Gate>> gatesSet = new ArrayList<>();
+
     protected void readOriginalData(
             ArrayList<ArrayList<String>> originalPucksData,
-            ArrayList<ArrayList<String>> originalTicketsData) {
+            ArrayList<ArrayList<String>> originalTicketsData,
+            ArrayList<ArrayList<String>> originalGatesData) {
 
         readOriginalPucksData(originalPucksData);
         readOriginalTicketsData(originalTicketsData);
+        readOriginalGatesDate(originalGatesData);
     }
 
     protected void readOriginalPucksData(
@@ -50,6 +81,16 @@ public class ProblemTwo extends Problem {
                 0, true,
                 1, 659,
                 0, -1, originalTicketsData);
+    }
+
+    protected void readOriginalGatesDate(
+            ArrayList<ArrayList<String>> originalGatesData) {
+
+        ExcelReader.importXlsFile(
+                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
+                2, true,
+                1, 70,
+                0, -1, originalGatesData);
     }
 
     protected void generateFlightRecords(
@@ -124,6 +165,26 @@ public class ProblemTwo extends Problem {
 
     }
 
+    protected void generateGates(ArrayList<ArrayList<String>> originalGatesData) {
+
+        for (int i = 0; i < originalGatesData.size(); i++) {
+
+            ArrayList<String> currentRecord = originalGatesData.get(i);
+
+            int id = Integer.valueOf(currentRecord.get(0));
+            String hallType = currentRecord.get(2);
+            String location = currentRecord.get(3);
+            String arrivalType = currentRecord.get(4);
+            String leftType = currentRecord.get(5);
+            String planeType = currentRecord.get(6);
+
+            Gate gate = new Gate(id, hallType, location, arrivalType,
+                    leftType, planeType);
+
+            this.gatesArrayList.add(gate);
+        }
+    }
+
     protected void initFlightRecordTreeSets() {
 
         for (int i = 0; i < this.flightRecordArrayList.size(); i++) {
@@ -142,34 +203,84 @@ public class ProblemTwo extends Problem {
                     this.RUType.add(flightRecord);
                     break;
                 }
-                case "NT":{
+                case "NT": {
                     this.NTType.add(flightRecord);
                     break;
                 }
-                case "NU":{
+                case "NU": {
                     this.NUType.add(flightRecord);
                     break;
                 }
-                default:{
+                default: {
                     throw new RuntimeException();
                 }
             }
         }
     }
 
+    protected void initGatesSet() {
+
+        for (int i = 0; i < 16; i++) {
+            ArrayList<Gate> gateArrayList = new ArrayList<>();
+            this.gatesSet.add(gateArrayList);
+        }
+
+        for (int id = 1; id < this.gatesArray.length; id++) {
+
+            Gate gate = this.gatesArray[id];
+
+            String arrivalType = gate.getArrivalType();
+            String leftType = gate.getLeftType();
+            String planeType = gate.getPlaneType();
+            String hallType = gate.getHallType();
+
+            if (arrivalType.length() == 1 && leftType.length() == 1) {
+            } else if (arrivalType.length() != 1 && leftType.length() != 1) {
+                int gateID = gate.getId();
+                if (gateID < 13) {
+                    arrivalType = "D";
+                    leftType = "I";
+                } else {
+                    arrivalType = "I";
+                    leftType = "D";
+                }
+            } else {
+                if (arrivalType.length() == 1) {
+                    leftType = (arrivalType.equals("D") ? "I" : "D");
+                } else  {
+                    arrivalType = (leftType.equals("D") ? "I" : "D");
+                }
+            }
+
+            String key = arrivalType + leftType + planeType + hallType;
+
+            if (!this.gatesTypeIndex.containsKey(key)) {
+                throw new RuntimeException();
+            }
+
+            int index = this.gatesTypeIndex.get(key);
+
+            this.gatesSet.get(index).add(gate);
+        }
+    }
+
     protected void generateRecords(
             ArrayList<ArrayList<String>> originalPucksData,
-            ArrayList<ArrayList<String>> originalTicketsData) {
+            ArrayList<ArrayList<String>> originalTicketsData,
+            ArrayList<ArrayList<String>> originalGatesData) {
 
         generateFlightRecords(originalPucksData);
 
         generatePassengerRecords(originalTicketsData);
 
-        generateFlightRecordArray(originalPucksData);
+        generateFlightRecordArray();
+
+        generateGates(originalGatesData);
+
+        generateGatesArray();
     }
 
-    protected void generateFlightRecordArray(
-            ArrayList<ArrayList<String>> originalPucksData) {
+    protected void generateFlightRecordArray() {
 
         if (this.flightRecordArrayList.isEmpty()) {
             throw new RuntimeException();
@@ -186,18 +297,33 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    protected void generateGatesArray() {
+
+        for (int i = 0; i < this.gatesArrayList.size(); i++) {
+
+            Gate gate = this.gatesArrayList.get(i);
+
+            int id = gate.getId();
+
+            this.gatesArray[id] = gate;
+        }
+    }
+
     private void mainProcess() {
 
         ArrayList<ArrayList<String>> originalPucksData
                 = new ArrayList<>();
         ArrayList<ArrayList<String>> originalTicketsData
                 = new ArrayList<>();
+        ArrayList<ArrayList<String>> originalGatesData
+                = new ArrayList<>();
 
-        readOriginalData(originalPucksData, originalTicketsData);
+        readOriginalData(originalPucksData, originalTicketsData, originalGatesData);
 
-        generateRecords(originalPucksData, originalTicketsData);
+        generateRecords(originalPucksData, originalTicketsData, originalGatesData);
 
         initFlightRecordTreeSets();
+        initGatesSet();
 
         System.out.println("haha");
     }
