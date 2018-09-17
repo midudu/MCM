@@ -81,14 +81,14 @@ public class Problem {
         }
     }
 
-    private int convertDateToMinute(String date) {
+    protected int convertDateToMinute(String date) {
 
         String day = date.substring(date.length() - 2, date.length());
 
         return Integer.valueOf(day) * 24 * 60;
     }
 
-    private int convertTimeToMinute(String time) {
+    protected int convertTimeToMinute(String time) {
 
         String[] splitResult = time.split(":");
 
