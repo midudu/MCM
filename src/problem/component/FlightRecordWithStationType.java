@@ -15,4 +15,8 @@ public class FlightRecordWithStationType extends FlightRecord {
 
         this.stationType = stationType;
     }
+
+    public String getStationType() {
+        return stationType;
+    }
 }

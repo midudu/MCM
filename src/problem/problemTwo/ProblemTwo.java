@@ -7,6 +7,7 @@ import problem.component.PassengerRecord;
 import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class ProblemTwo extends Problem {
 
@@ -17,6 +18,11 @@ public class ProblemTwo extends Problem {
 
     protected FlightRecordWithStationType[] flightRecordArray
             = new FlightRecordWithStationType[243];
+
+    private TreeSet<FlightRecord> RTType = new TreeSet<>();
+    private TreeSet<FlightRecord> RUType = new TreeSet<>();
+    private TreeSet<FlightRecord> NTType = new TreeSet<>();
+    private TreeSet<FlightRecord> NUType = new TreeSet<>();
 
     protected void readOriginalData(
             ArrayList<ArrayList<String>> originalPucksData,
@@ -72,19 +78,19 @@ public class ProblemTwo extends Problem {
             String leftType = currentRecord.get(2);
             String planeType = currentRecord.get(1);
 
-            String stationType;
+            String stationType = "";
             String appearFlag = currentRecord.get(9);
-            if (appearFlag.equals("n")) {
-                stationType = "R";
-            } else if (appearFlag.equals("r")) {
-                String stationTypeInSheet = currentRecord.get(10);
-                if (stationTypeInSheet.equals("T")) {
-                    stationType = "T";
-                } else {
-                    stationType = "U";
-                }
+            if (appearFlag.equals("r")) {
+                stationType += "R";
             } else {
-                throw new RuntimeException();
+                stationType += "N";
+            }
+
+            String stationTypeInSheet = currentRecord.get(10);
+            if (stationTypeInSheet.equals("T")) {
+                stationType += "T";
+            } else {
+                stationType += "U";
             }
 
             FlightRecordWithStationType flightRecord
@@ -116,6 +122,39 @@ public class ProblemTwo extends Problem {
             this.passengerRecordArrayList.add(passengerRecord);
         }
 
+    }
+
+    protected void initFlightRecordTreeSets() {
+
+        for (int i = 0; i < this.flightRecordArrayList.size(); i++) {
+
+            FlightRecordWithStationType flightRecord
+                    = this.flightRecordArrayList.get(i);
+
+            String stationType = flightRecord.getStationType();
+
+            switch (stationType) {
+                case "RT": {
+                    this.RTType.add(flightRecord);
+                    break;
+                }
+                case "RU": {
+                    this.RUType.add(flightRecord);
+                    break;
+                }
+                case "NT":{
+                    this.NTType.add(flightRecord);
+                    break;
+                }
+                case "NU":{
+                    this.NUType.add(flightRecord);
+                    break;
+                }
+                default:{
+                    throw new RuntimeException();
+                }
+            }
+        }
     }
 
     protected void generateRecords(
@@ -157,6 +196,8 @@ public class ProblemTwo extends Problem {
         readOriginalData(originalPucksData, originalTicketsData);
 
         generateRecords(originalPucksData, originalTicketsData);
+
+        initFlightRecordTreeSets();
 
         System.out.println("haha");
     }
