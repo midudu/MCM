@@ -38,7 +38,11 @@ public class StatisticOfData extends ProblemTwo {
 
     public static void main(String[] args) {
 
-        StatisticOfData problem = new StatisticOfData();
+        StatisticOfData statisticOfData = new StatisticOfData();
+
+        statisticOfData.calculatePassengerNumbers();
+
+        /*StatisticOfData problem = new StatisticOfData();
 
         ArrayList<ArrayList<String>> originalPucksData = new ArrayList<>();
         ExcelReader.importXlsFile(
@@ -84,14 +88,14 @@ public class StatisticOfData extends ProblemTwo {
             String leftName = currentRecord.get(7);
 
             ArrayList<String> currentId = new ArrayList<>();
-            /*if (arrivalName.equals("NV6763")
+            *//*if (arrivalName.equals("NV6763")
                     || arrivalName.equals("NV6319")
                     || arrivalName.equals("NV6489")
                     || arrivalName.equals("NV6753")
                     || arrivalName.equals("GN0455")
                     || arrivalName.equals("GN0645")) {
                 currentResult.add("");
-            } else {*/
+            } else {*//*
 
                 Integer numbers = hashMapArrival.getOrDefault(arrivalName,0)
                         + hashMapLeft.getOrDefault(leftName,0);
@@ -103,7 +107,7 @@ public class StatisticOfData extends ProblemTwo {
         }
 
         ExcelWriter.exportXlsFile("numbers.xls",
-                result,0,null,0,0);
+                result,0,null,0,0);*/
 
         System.out.println("haha");
     }

@@ -2,6 +2,7 @@ package problem.problemThree;
 
 import problem.component.FlightRecordWithStationType;
 import problem.component.Gate;
+import problem.component.PassengerRecord;
 import problem.component.SolutionVector;
 import problem.problemTwo.ProblemTwo;
 
@@ -225,6 +226,13 @@ public class ProblemThree extends ProblemTwo {
                 }
             }
         }
+    }
+
+    private int calculateTotalTimeOfPassengersProcedure(
+            ArrayList<PassengerRecord> passengerRecordArrayList,
+            SolutionVector solutionVector) {
+
+        return -1;
     }
 
     private void enumerationMethod() {

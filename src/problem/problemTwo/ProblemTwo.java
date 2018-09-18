@@ -487,7 +487,7 @@ public class ProblemTwo extends Problem {
         }
     }
 
-    protected int calculateTotalTimeOfPassengersProcedure(
+    private int calculateTotalTimeOfPassengersProcedure(
             ArrayList<PassengerRecord> passengerRecordArrayList,
             SolutionVector solutionVector) {
 
@@ -501,6 +501,8 @@ public class ProblemTwo extends Problem {
             String leftFlightType = passengerRecord.getLeftFlightType();
             int arrivalFlightId = passengerRecord.getArrivalFlightId();
             int leftFlightId = passengerRecord.getLeftFlightId();
+            int passengerNumbers = passengerRecord.getPassengerNumbers();
+
 
             if (conflictId.contains(arrivalFlightId)
                     || conflictId.contains(leftFlightId)) {
@@ -517,7 +519,7 @@ public class ProblemTwo extends Problem {
                 throw new RuntimeException();
             }
 
-            totalTime += Constant.minProcedureTime.get(key);
+            totalTime += Constant.minProcedureTime.get(key) * passengerNumbers;
         }
 
         return totalTime;
