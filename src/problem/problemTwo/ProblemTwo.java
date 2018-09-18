@@ -1,6 +1,5 @@
 package problem.problemTwo;
 
-import org.opencv.core.Mat;
 import problem.Problem;
 import problem.component.*;
 import util.ioUtil.excel.ExcelReader;
@@ -8,6 +7,9 @@ import util.ioUtil.excel.ExcelReader;
 import java.util.*;
 
 public class ProblemTwo extends Problem {
+
+    protected int conflictCount = 0;
+    protected HashSet<FlightRecordWithStationType> conflictRecord = new HashSet<>();
 
     protected ArrayList<FlightRecordWithStationType> flightRecordArrayList
             = new ArrayList<>();
@@ -21,10 +23,10 @@ public class ProblemTwo extends Problem {
 
     protected Gate[] gatesArray = new Gate[70];
 
-    private TreeSet<FlightRecord> RTType = new TreeSet<>();
-    private TreeSet<FlightRecord> RUType = new TreeSet<>();
-    private TreeSet<FlightRecord> NTType = new TreeSet<>();
-    private TreeSet<FlightRecord> NUType = new TreeSet<>();
+    private TreeSet<FlightRecordWithStationType> RTType = new TreeSet<>();
+    private TreeSet<FlightRecordWithStationType> RUType = new TreeSet<>();
+    private TreeSet<FlightRecordWithStationType> NTType = new TreeSet<>();
+    private TreeSet<FlightRecordWithStationType> NUType = new TreeSet<>();
 
     private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
 
@@ -362,12 +364,124 @@ public class ProblemTwo extends Problem {
     protected void initializeSolutionVectorOfSimulateAnnealing(
             SolutionVector solutionVector) {
 
-
     }
 
     protected void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
-        //afjgflaj
+        arrangeCurrentTypeFlightRecords(this.RTType, solutionVector);
+
+        arrangeCurrentTypeFlightRecords(this.NTType, solutionVector);
+
+        arrangeCurrentTypeFlightRecords(this.RUType, solutionVector);
+
+        arrangeCurrentTypeFlightRecords(this.NUType, solutionVector);
+    }
+
+    protected void arrangeCurrentTypeFlightRecords(
+            TreeSet<FlightRecordWithStationType> currentTypeFlightRecords
+            , SolutionVector solutionVector) {
+
+        Iterator<FlightRecordWithStationType> iterator
+                = currentTypeFlightRecords.iterator();
+
+        while (iterator.hasNext()) {
+
+            FlightRecordWithStationType flightRecord = iterator.next();
+
+            decideCurrentFlightRecordBelongs(flightRecord, solutionVector);
+        }
+    }
+
+    protected void decideCurrentFlightRecordBelongs(
+            FlightRecordWithStationType flightRecord, SolutionVector solutionVector) {
+
+        String stationType = flightRecord.getStationType();
+
+        String arrivalType = flightRecord.getArrivalType();
+        String leftType = flightRecord.getLeftType();
+        String planeType = flightRecord.getPlaneType();
+        int id = flightRecord.getId();
+        String targetStationType = solutionVector.get(id - 1);
+
+        String key = arrivalType + leftType + planeType + targetStationType;
+
+        ArrayList<Gate> currentTypeGates = this.gatesSet.get(gatesTypeIndex.get(key));
+
+        boolean arrangeResult = arrangeOnCurrentTypeOfGates(currentTypeGates, flightRecord);
+        if (!arrangeResult) {
+
+            if (stationType.contains("U")) {
+
+                targetStationType = (targetStationType.equals("T") ? "S" : "T");
+                solutionVector.set(id - 1,
+                        (targetStationType.equals("T") ? "S" : "T"));
+
+                key = arrivalType + leftType + planeType + targetStationType;
+                currentTypeGates = this.gatesSet.get(gatesTypeIndex.get(key));
+                arrangeResult = arrangeOnCurrentTypeOfGates(
+                        currentTypeGates, flightRecord);
+
+                if (!arrangeResult) {
+                    if (!conflictRecord.contains(flightRecord)) {
+                        conflictCount++;
+                        conflictRecord.add(flightRecord);
+                    }
+                }
+            } else {
+                if (!conflictRecord.contains(flightRecord)) {
+                    conflictCount++;
+                    conflictRecord.add(flightRecord);
+                }
+            }
+        }
+    }
+
+    protected boolean arrangeOnCurrentTypeOfGates(
+            ArrayList<Gate> currentTypeGates,
+            FlightRecordWithStationType flightRecord) {
+
+        if (currentTypeGates.isEmpty()) {
+            return false;
+        }
+
+        int leftTime = flightRecord.getLeftTime();
+
+        int gateIndex = -1;
+        for (int i = 0; i < currentTypeGates.size(); i++) {
+
+            Gate currentGate = currentTypeGates.get(i);
+            LinkedList<FlightRecordWithStationType>
+                    flightRecordLinkedList
+                    = currentGate.getFlightRecords();
+
+            if (flightRecordLinkedList.isEmpty()) {
+                gateIndex = i;
+            } else {
+                if (leftTime >= flightRecordLinkedList.getLast().getLeftTime() + 75) {
+                    flightRecordLinkedList.addLast(flightRecord);
+                    return true;
+                }
+                int lastLeftTime = 0;
+                for (int j = 0; j < flightRecordLinkedList.size(); j++) {
+
+                    int currentLeftTime = flightRecordLinkedList.get(j).getLeftTime();
+                    if (leftTime >= lastLeftTime + 75
+                            && leftTime <= currentLeftTime - 75) {
+
+                        flightRecordLinkedList.add(j, flightRecord);
+                        return true;
+                    }
+                    lastLeftTime = currentLeftTime;
+                }
+            }
+        }
+
+        if (gateIndex == -1) {
+            return false;
+        } else {
+            currentTypeGates.get(gateIndex).getFlightRecords().add(flightRecord);
+            return true;
+        }
     }
 
     protected int calculateTotalTimeOfPassengersProcedure() {
@@ -438,6 +552,19 @@ public class ProblemTwo extends Problem {
         }*/
     }
 
+    protected void clearGatesSet(ArrayList<ArrayList<Gate>> gatesSet) {
+
+        for (int i = 0; i < gatesSet.size(); i++) {
+
+            for (int j = 0; j < gatesSet.get(i).size(); j++) {
+
+                Gate gate = gatesSet.get(i).get(j);
+
+                gate.clear();
+            }
+        }
+    }
+
     protected void initializeSolutionVectorOfEnumerationMethod(
             SolutionVector solutionVector, int seed) {
 
@@ -463,7 +590,7 @@ public class ProblemTwo extends Problem {
                     if (relativePassengers > 60) {
 
                         if (currentSeedIndex < 0) {
-                            solutionVector.set(id-1, map[0]);
+                            solutionVector.set(id - 1, map[0]);
                         } else {
                             solutionVector.set(id - 1,
                                     map[Integer.valueOf(Character.toString(
@@ -472,7 +599,7 @@ public class ProblemTwo extends Problem {
                             currentSeedIndex--;
                         }
 
-                    } else{
+                    } else {
                         solutionVector.set(id - 1, map[new Random().nextInt(2)]);
                     }
                 }
@@ -486,14 +613,24 @@ public class ProblemTwo extends Problem {
 
         SolutionVector solutionVector
                 = new SolutionVector(this.flightRecordArray.length - 1);
-        int maxSeed = 1024;
+        int maxSeed = 1;
 
         for (int seed = 0; seed < maxSeed; seed++) {
+
+            clearGatesSet(gatesSet);
 
             initializeSolutionVectorOfEnumerationMethod(solutionVector, seed);
 
             adjustCurrentSolutionVector(solutionVector);
 
+            int count = 0;
+            for (int i = 1; i < this.gatesArray.length;i++) {
+
+                Gate gate = gatesArray[i];
+                count += gate.getFlightRecords().size();
+            }
+
+            System.out.println("haha");
         }
     }
 

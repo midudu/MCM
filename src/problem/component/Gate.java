@@ -59,4 +59,9 @@ public class Gate {
     public LinkedList<FlightRecordWithStationType> getFlightRecords() {
         return flightRecords;
     }
+
+    public void clear() {
+
+        this.flightRecords.clear();
+    }
 }
