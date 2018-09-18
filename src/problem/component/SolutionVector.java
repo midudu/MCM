@@ -18,6 +18,11 @@ public class SolutionVector {
         solutionVector[index] = value;
     }
 
+    public String get(int index) {
+
+        return solutionVector[index];
+    }
+
     public SolutionVector cloneSolutionVector() {
 
         SolutionVector newSolutionVector

@@ -1,5 +1,6 @@
 package problem.problemTwo;
 
+import org.opencv.core.Mat;
 import problem.Problem;
 import problem.component.*;
 import util.ioUtil.excel.ExcelReader;
@@ -164,10 +165,12 @@ public class ProblemTwo extends Problem {
                 stationType += "U";
             }
 
+            int relativePassengers = Integer.valueOf(currentRecord.get(12).trim());
+
             FlightRecordWithStationType flightRecord
                     = new FlightRecordWithStationType(
                     id, arrival, left, arrivalFlightName, leftFlightName,
-                    arrivalType, leftType, planeType, stationType);
+                    arrivalType, leftType, planeType, stationType, relativePassengers);
 
             this.flightRecordArrayList.add(flightRecord);
         }
@@ -356,12 +359,13 @@ public class ProblemTwo extends Problem {
         initGatesSet();
     }
 
-    protected void initializeSolutionVector(SolutionVector solutionVector) {
+    protected void initializeSolutionVectorOfSimulateAnnealing(
+            SolutionVector solutionVector) {
 
-        //algjal
+
     }
 
-    protected void adjustCurrentSolutionVector() {
+    protected void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
         //afjgflaj
     }
@@ -374,14 +378,14 @@ public class ProblemTwo extends Problem {
 
     protected void simulatedAnnealing() {
 
-        double originalTemperature = 97.0;
+        /*double originalTemperature = 97.0;
         double finalTemperature = 3.0;
         double descendingCoefficient = 0.95;
         int MarkovLength = 100;
         double temperatureCoefficient = 2.0;
         int minTotalTime = -1;
 
-        initializeSolutionVector(this.solutionVectorOfTOrS);
+        initializeSolutionVectorOfSimulateAnnealing(this.solutionVectorOfTOrS);
 
         double temperature = originalTemperature;
 
@@ -431,6 +435,65 @@ public class ProblemTwo extends Problem {
             }
 
             temperature *= descendingCoefficient;
+        }*/
+    }
+
+    protected void initializeSolutionVectorOfEnumerationMethod(
+            SolutionVector solutionVector, int seed) {
+
+        String binarySeed = Integer.toBinaryString(seed);
+        int currentSeedIndex = binarySeed.length() - 1;
+
+        String[] map = {"T", "S"};
+
+        for (int i = 1; i < flightRecordArray.length; i++) {
+
+            int id = flightRecordArray[i].getId();
+
+            String stationType = flightRecordArray[i].getStationType();
+
+            if (stationType.contains("T")) {
+                solutionVector.set(id - 1, map[0]);
+            } else {
+                if (stationType.contains("N")) {
+                    solutionVector.set(id - 1, map[new Random().nextInt(2)]);
+                } else {
+                    int relativePassengers
+                            = flightRecordArray[i].getRelativePassengers();
+                    if (relativePassengers > 60) {
+
+                        if (currentSeedIndex < 0) {
+                            solutionVector.set(id-1, map[0]);
+                        } else {
+                            solutionVector.set(id - 1,
+                                    map[Integer.valueOf(Character.toString(
+                                            binarySeed.charAt(currentSeedIndex)))]);
+
+                            currentSeedIndex--;
+                        }
+
+                    } else{
+                        solutionVector.set(id - 1, map[new Random().nextInt(2)]);
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    protected void enumerationMethod() {
+
+        SolutionVector solutionVector
+                = new SolutionVector(this.flightRecordArray.length - 1);
+        int maxSeed = 1024;
+
+        for (int seed = 0; seed < maxSeed; seed++) {
+
+            initializeSolutionVectorOfEnumerationMethod(solutionVector, seed);
+
+            adjustCurrentSolutionVector(solutionVector);
+
         }
     }
 
@@ -439,25 +502,15 @@ public class ProblemTwo extends Problem {
 
         initialization();
 
-        simulatedAnnealing();
+        enumerationMethod();
 
         System.out.println("haha");
     }
 
     public static void main(String[] args) {
 
-        /*ProblemTwo problemTwo = new ProblemTwo();
+        ProblemTwo problemTwo = new ProblemTwo();
 
-        problemTwo.mainProcess();*/
-
-        ArrayList<Integer> arrayList1 = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            arrayList1.add(i);
-        }
-
-        ArrayList<Integer> arrayList2 = new ArrayList<>(arrayList1);
-        arrayList1.set(4, 10);
-
-        System.out.println(arrayList2.toString());
+        problemTwo.mainProcess();
     }
 }
