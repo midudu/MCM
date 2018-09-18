@@ -464,6 +464,8 @@ public class ProblemThree extends ProblemTwo {
 
     private void simulatedAnnealingMethod() {
 
+        System.out.println("Calculating...");
+
         int acceptCount = 0;
 
         SolutionVector solutionVector
@@ -519,7 +521,7 @@ public class ProblemThree extends ProblemTwo {
                             * temperatureCoefficient / currentTemperature);
 
                     if (randomValue < calculatedValue) {
-                        
+
                         minTime = totalTime;
                         finalConflictCount = conflictCount;
                         finalUnconflictCount = unconflictCount;

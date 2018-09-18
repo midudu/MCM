@@ -623,6 +623,8 @@ public class ProblemTwo extends Problem {
 
     private void simulatedAnnealing() {
 
+        System.out.println("Calculating...");
+
         int acceptCount = 0;
 
         SolutionVector solutionVector
@@ -686,10 +688,10 @@ public class ProblemTwo extends Problem {
                 }
 
 
-                System.out.println(
+                /*System.out.println(
                         String.valueOf(totalTime) + "  "
                                 + String.valueOf(unconflictCount) + "  "
-                                + String.valueOf(conflictCount));
+                                + String.valueOf(conflictCount));*/
             }
 
             currentTemperature *= descendingCoefficient;
