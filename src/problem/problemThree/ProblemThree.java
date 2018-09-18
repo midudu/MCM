@@ -1,9 +1,6 @@
 package problem.problemThree;
 
-import problem.component.FlightRecordWithStationType;
-import problem.component.Gate;
-import problem.component.PassengerRecord;
-import problem.component.SolutionVector;
+import problem.component.*;
 import problem.problemTwo.ProblemTwo;
 
 import java.util.*;
@@ -232,7 +229,38 @@ public class ProblemThree extends ProblemTwo {
             ArrayList<PassengerRecord> passengerRecordArrayList,
             SolutionVector solutionVector) {
 
-        return -1;
+        int totalTime = 0;
+
+        for (int i = 0; i < passengerRecordArrayList.size(); i++) {
+
+            PassengerRecord passengerRecord = passengerRecordArrayList.get(i);
+
+            String arrivalFlightType = passengerRecord.getArrivalFlightType();
+            String leftFlightType = passengerRecord.getLeftFlightType();
+            int arrivalFlightId = passengerRecord.getArrivalFlightId();
+            int leftFlightId = passengerRecord.getLeftFlightId();
+            int passengerNumbers = passengerRecord.getPassengerNumbers();
+
+
+            if (conflictId.contains(arrivalFlightId)
+                    || conflictId.contains(leftFlightId)) {
+                continue;
+            }
+
+            String arrivalFlightStationType = solutionVector.get(arrivalFlightId - 1);
+            String leftFlightStationType = solutionVector.get(leftFlightId - 1);
+
+            String key = arrivalFlightType + leftFlightType + arrivalFlightStationType
+                    + leftFlightStationType;
+
+            if (!Constant.minProcedureTime.containsKey(key)) {
+                throw new RuntimeException();
+            }
+
+            totalTime += Constant.minProcedureTime.get(key) * passengerNumbers;
+        }
+
+
     }
 
     private void enumerationMethod() {
