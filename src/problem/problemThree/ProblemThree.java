@@ -471,11 +471,13 @@ public class ProblemThree extends ProblemTwo {
 
         initializeSolutionVectorFromProblemTwo(solutionVector);
 
-        int minTime = Integer.MAX_VALUE;
+        int minTime = 84434;
+        int finalConflictCount = -1;
+        int finalUnconflictCount = -1;
 
         double originalTemperature = 97.0;
         double finalTemperature = 1.0;
-        double descendingCoefficient = 0.9999;
+        double descendingCoefficient = 0.99999;
         double temperatureCoefficient = 2.0;
 
         double currentTemperature = originalTemperature;
@@ -503,6 +505,9 @@ public class ProblemThree extends ProblemTwo {
                 if (totalTime < minTime) {
 
                     minTime = totalTime;
+                    finalConflictCount = conflictCount;
+                    finalUnconflictCount = unconflictCount;
+
                     exportToExcel();
                     solutionVector = currentSolutionVector;
 
@@ -514,7 +519,11 @@ public class ProblemThree extends ProblemTwo {
                             * temperatureCoefficient / currentTemperature);
 
                     if (randomValue < calculatedValue) {
+                        
                         minTime = totalTime;
+                        finalConflictCount = conflictCount;
+                        finalUnconflictCount = unconflictCount;
+
                         exportToExcel();
                         solutionVector = currentSolutionVector;
 
@@ -522,17 +531,18 @@ public class ProblemThree extends ProblemTwo {
                     }
                 }
 
-                System.out.println(
+                /*System.out.println(
                         String.valueOf(totalTime) + "  "
                                 + String.valueOf(unconflictCount) + "  "
-                                + String.valueOf(conflictCount));
+                                + String.valueOf(conflictCount));*/
             }
 
             currentTemperature *= descendingCoefficient;
         }
 
-        System.out.println(minTime);
-
+        System.out.println("min time:" + String.valueOf(minTime));
+        System.out.println("conflict count:" + String.valueOf(finalConflictCount));
+        System.out.println("unconflict count:" + String.valueOf(finalUnconflictCount));
         System.out.println("accept count:" + String.valueOf(acceptCount));
 
     }
