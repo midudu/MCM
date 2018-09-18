@@ -35,4 +35,9 @@ public class SolutionVector {
 
         return newSolutionVector;
     }
+
+    public int size() {
+
+        return this.solutionVector.length;
+    }
 }

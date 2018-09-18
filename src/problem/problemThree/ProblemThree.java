@@ -2,6 +2,7 @@ package problem.problemThree;
 
 import problem.component.*;
 import problem.problemTwo.ProblemTwo;
+import util.ioUtil.excel.ExcelReader;
 
 import java.util.*;
 
@@ -142,12 +143,6 @@ public class ProblemThree extends ProblemTwo {
     }
 
 
-    private void initializeSolutionVectorOfEnumerationMethod(
-            SolutionVector solutionVector, int seed, int passengerNumbersThreshold) {
-
-        //j;lgasfasg
-    }
-
     private void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
         arrangeCurrentTypeFlightRecords(this.RTType, solutionVector);
@@ -274,15 +269,53 @@ public class ProblemThree extends ProblemTwo {
         return totalTime;
     }
 
-    private void enumerationMethod() {
+    private void initializeSolutionVectorFromProblemTwo(
+            SolutionVector solutionVector) {
+
+        ArrayList<ArrayList<String>> resultOfProblemTwo
+                = new ArrayList<>();
+
+        ExcelReader.importXlsFile(
+                "E:\\Java_Projects\\MCM\\resultOfProblemTwo\\resultOfProblemTwoForProgram.xls",
+                0, true,
+                0, 69,
+                0, -1, resultOfProblemTwo);
+
+        for (int i = 0; i < solutionVector.size(); i++) {
+
+            solutionVector.set(i, "TN");
+        }
+
+        for (int i = 0; i < resultOfProblemTwo.size(); i++) {
+            ArrayList<String> currentRecord = resultOfProblemTwo.get(i);
+
+            int gateId = Integer.valueOf(currentRecord.get(0));
+            String hallType = this.gatesArray[gateId].getHallType();
+            String location = this.gatesArray[gateId].getLocation().substring(0, 1);
+            String value = hallType + location;
+
+            for (int j = 1; j < currentRecord.size(); j++) {
+
+                if (currentRecord.get(j).equals("")) {
+                    break;
+                }
+
+                int flightId = Integer.valueOf(currentRecord.get(j));
+                solutionVector.set(flightId - 1, value);
+            }
+        }
+    }
+
+    private void simulatedAnnealingMethod() {
 
         SolutionVector solutionVector
                 = new SolutionVector(this.flightRecordArray.length - 1);
-        int maxSeed = 8388608;
-        int minTime = Integer.MAX_VALUE;
-        int passengerNumbersThreshold = 39;
 
-        for (int seed = 0; seed < maxSeed; seed++) {
+        initializeSolutionVectorFromProblemTwo(solutionVector);
+
+        int minTime = Integer.MAX_VALUE;
+
+        /*for (int seed = 0; seed < maxSeed; seed++) {
 
             clear();
 
@@ -307,16 +340,17 @@ public class ProblemThree extends ProblemTwo {
                     String.valueOf(totalTime) + "  "
                             + String.valueOf(unconflictCount) + "  "
                             + String.valueOf(conflictCount));
-        }
+        }*/
 
         System.out.println(minTime);
-
 
     }
 
     private void mainProcess() {
 
         initialization();
+
+        simulatedAnnealingMethod();
 
 
         System.out.println("haha");

@@ -363,10 +363,6 @@ public class ProblemTwo extends Problem {
         initGatesSet();
     }
 
-    protected void initializeSolutionVectorOfSimulateAnnealing(
-            SolutionVector solutionVector) {
-
-    }
 
     private void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
