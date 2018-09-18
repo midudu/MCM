@@ -583,7 +583,7 @@ public class ProblemTwo extends Problem {
         }*/
     }
 
-    protected void clear() {
+    private void clear() {
 
         for (int i = 0; i < gatesSet.size(); i++) {
 
@@ -643,7 +643,7 @@ public class ProblemTwo extends Problem {
 
     }
 
-    protected void exportGateSituationToExcel(Gate[] gatesArray) {
+    private void exportGateSituationToExcel(Gate[] gatesArray) {
 
         ArrayList<ArrayList<String>> result = new ArrayList<>();
 
@@ -669,7 +669,7 @@ public class ProblemTwo extends Problem {
                 result, 0, null, 0, 0);
     }
 
-    protected void exportConflictRecordToExcel(
+    private void exportConflictRecordToExcel(
             HashSet<FlightRecordWithStationType> conflictRecord) {
 
         ArrayList<ArrayList<String>> result = new ArrayList<>();
@@ -691,7 +691,7 @@ public class ProblemTwo extends Problem {
                 result, 0, null, 0, 0);
     }
 
-    protected void exportToExcel() {
+    private void exportToExcel() {
 
         exportGateSituationToExcel(this.gatesArray);
         exportConflictRecordToExcel(this.conflictRecord);

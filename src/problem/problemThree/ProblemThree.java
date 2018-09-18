@@ -3,6 +3,7 @@ package problem.problemThree;
 import problem.component.*;
 import problem.problemTwo.ProblemTwo;
 import util.ioUtil.excel.ExcelReader;
+import util.ioUtil.excel.ExcelWriter;
 
 import java.util.*;
 
@@ -145,6 +146,77 @@ public class ProblemThree extends ProblemTwo {
             arrayList2.add(strings[i][0]);
             backupGates.put(strings[i][1], arrayList2);
         }
+    }
+
+    private void clear() {
+
+        for (int i = 0; i < gatesSet.size(); i++) {
+
+            for (int j = 0; j < gatesSet.get(i).size(); j++) {
+
+                Gate gate = gatesSet.get(i).get(j);
+
+                gate.clear();
+            }
+        }
+
+        this.conflictId.clear();
+        this.conflictRecord.clear();
+        this.conflictCount = 0;
+    }
+
+    private void exportToExcel() {
+
+        exportGateSituationToExcel(this.gatesArray);
+        exportConflictRecordToExcel(this.conflictRecord);
+    }
+
+    private void exportGateSituationToExcel(Gate[] gatesArray) {
+
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+
+        for (int i = 1; i < gatesArray.length; i++) {
+
+            ArrayList<String> currentGate = new ArrayList<>();
+
+            Gate gate = gatesArray[i];
+            int id = gate.getId();
+            currentGate.add(Integer.toString(id));
+
+            LinkedList<FlightRecordWithStationType> flightRecord
+                    = gate.getFlightRecords();
+            for (int j = 0; j < flightRecord.size(); j++) {
+                int flightId = flightRecord.get(j).getId();
+                currentGate.add(Integer.toString(flightId));
+            }
+
+            result.add(currentGate);
+        }
+
+        ExcelWriter.exportXlsFile("resultOfProblemThree.xls",
+                result, 0, null, 0, 0);
+    }
+
+    private void exportConflictRecordToExcel(
+            HashSet<FlightRecordWithStationType> conflictRecord) {
+
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+
+        Iterator<FlightRecordWithStationType> iterator = conflictRecord.iterator();
+
+        while (iterator.hasNext()) {
+
+            ArrayList<String> currentRecord = new ArrayList<>();
+
+            FlightRecordWithStationType flightRecord = iterator.next();
+
+            currentRecord.add(Integer.toString(flightRecord.getId()));
+
+            result.add(currentRecord);
+        }
+
+        ExcelWriter.exportXlsFile("conflictOfProblemThree.xls",
+                result, 0, null, 0, 0);
     }
 
     private void generateRouletteElement() {
