@@ -8,6 +8,11 @@ import java.util.*;
 
 public class ProblemThree extends ProblemTwo {
 
+    private ArrayList<ArrayList<Integer>> rouletteElement = new ArrayList<>();
+    private int totalValueOfRoullete = 0;
+
+    private int lastChangedFlightId = -1;
+
     private ArrayList<ArrayList<Gate>> gatesSet = new ArrayList<>();
     private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
 
@@ -142,6 +147,47 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
+    private void generateRouletteElement() {
+
+        for (int i = 0; i < this.flightRecordArrayList.size(); i++) {
+
+            FlightRecordWithStationType flightRecord
+                    = this.flightRecordArrayList.get(i);
+
+            String stationType = flightRecord.getStationType();
+            if (stationType.contains("N") || stationType.contains("T")) {
+                continue;
+            }
+
+            int id = flightRecord.getId();
+            int relativePassengers = flightRecord.getRelativePassengers();
+
+            ArrayList<Integer> currentElement = new ArrayList<>();
+            currentElement.add(id);
+            currentElement.add(relativePassengers);
+
+            this.totalValueOfRoullete += relativePassengers;
+
+            this.rouletteElement.add(currentElement);
+        }
+    }
+
+    private int roullete() {
+
+        double randomValue = new Random().nextDouble() * this.totalValueOfRoullete;
+
+        int sum = 0;
+        for (int i = 0; i < this.rouletteElement.size(); i++) {
+
+            sum += this.rouletteElement.get(i).get(1);
+
+            if (sum >= randomValue) {
+                return this.rouletteElement.get(i).get(0);
+            }
+        }
+
+        return -1;
+    }
 
     private void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
@@ -306,6 +352,44 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
+    private SolutionVector[] generateNewSolutionVector(SolutionVector solutionVector) {
+
+        int toBeChangedFlightId = roullete();
+        while (toBeChangedFlightId == lastChangedFlightId) {
+            toBeChangedFlightId = roullete();
+        }
+        lastChangedFlightId = toBeChangedFlightId;
+
+        FlightRecordWithStationType flightRecord
+                = this.flightRecordArray[toBeChangedFlightId];
+        String arrivalType = flightRecord.getArrivalType();
+        String leftType = flightRecord.getLeftType();
+        String planeType = flightRecord.getPlaneType();
+        String key = arrivalType + leftType + planeType
+                + solutionVector.get(toBeChangedFlightId - 1);
+        if (!this.backupGates.containsKey(key)) {
+            throw new RuntimeException();
+        }
+
+        ArrayList<String> backupGatesNames = this.backupGates.get(key);
+
+        SolutionVector[] variationResult
+                = new SolutionVector[backupGatesNames.size()];
+
+        for (int i = 0; i < backupGatesNames.size(); i++) {
+
+            String newValue = backupGatesNames.get(i).substring(
+                    backupGatesNames.get(i).length() - 2,
+                    backupGatesNames.get(i).length());
+
+            SolutionVector newSolutionVector = solutionVector.cloneSolutionVector();
+            newSolutionVector.set(toBeChangedFlightId - 1, newValue);
+            variationResult[i] = newSolutionVector;
+        }
+
+        return variationResult;
+    }
+
     private void simulatedAnnealingMethod() {
 
         SolutionVector solutionVector
@@ -315,32 +399,61 @@ public class ProblemThree extends ProblemTwo {
 
         int minTime = Integer.MAX_VALUE;
 
-        /*for (int seed = 0; seed < maxSeed; seed++) {
+        double originalTemperature = 97.0;
+        double finalTemperature = 3.0;
+        double descendingCoefficient = 0.95;
+        double temperatureCoefficient = 2.0;
 
-            clear();
+        double currentTemperature = originalTemperature;
 
-            initializeSolutionVectorOfEnumerationMethod(
-                    solutionVector, seed, passengerNumbersThreshold);
+        while (currentTemperature > finalTemperature) {
 
-            adjustCurrentSolutionVector(solutionVector);
+            SolutionVector[] solutionVectors =
+                    generateNewSolutionVector(solutionVector);
 
-            int totalTime = calculateTotalTimeOfPassengersProcedure(
-                    passengerRecordArrayList, solutionVector);
+            for (int i = 0; i < solutionVectors.length; i++) {
 
-            int unconflictCount = statisticEffectiveFlightRecords(this.gatesArray);
-            int conflictCount = this.conflictCount;
+                clear();
 
-            if (totalTime < minTime) {
+                SolutionVector currentSolutionVector
+                        = solutionVectors[i];
 
-                minTime = totalTime;
-                exportToExcel();
+                adjustCurrentSolutionVector(currentSolutionVector);
+
+                int totalTime = calculateTotalTimeOfPassengersProcedure(
+                        passengerRecordArrayList, currentSolutionVector);
+
+                int unconflictCount = statisticEffectiveFlightRecords(this.gatesArray);
+                int conflictCount = this.conflictCount;
+
+                if (totalTime < minTime) {
+
+                    minTime = totalTime;
+                    exportToExcel();
+                    solutionVector = currentSolutionVector;
+
+                } else {
+
+                    double randomValue = new Random().nextDouble();
+                    double calculatedValue
+                            = Math.exp((minTime - totalTime)
+                            * temperatureCoefficient / currentTemperature);
+
+                    if (randomValue < calculatedValue) {
+                        minTime = totalTime;
+                        exportToExcel();
+                        solutionVector = currentSolutionVector;
+                    }
+                }
+
+                System.out.println(
+                        String.valueOf(totalTime) + "  "
+                                + String.valueOf(unconflictCount) + "  "
+                                + String.valueOf(conflictCount));
             }
 
-            System.out.println(
-                    String.valueOf(totalTime) + "  "
-                            + String.valueOf(unconflictCount) + "  "
-                            + String.valueOf(conflictCount));
-        }*/
+            currentTemperature *= descendingCoefficient;
+        }
 
         System.out.println(minTime);
 
@@ -420,6 +533,8 @@ public class ProblemThree extends ProblemTwo {
         initFlightRecordTreeSets();
 
         initGatesSet();
+
+        generateRouletteElement();
     }
 
 

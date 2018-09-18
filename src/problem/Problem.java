@@ -6,6 +6,7 @@ import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 
 public class Problem {
 
@@ -131,8 +132,13 @@ public class Problem {
     // Below is for test
     public static void main(String[] args) {
 
-        Problem problem = new Problem();
+        /*Problem problem = new Problem();
 
-        problem.dealTicketsSheet();
+        problem.dealTicketsSheet();*/
+
+        for (int i = 0; i < 100; i++) {
+
+            System.out.println(new Random().nextDouble());
+        }
     }
 }
