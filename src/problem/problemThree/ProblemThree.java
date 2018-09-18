@@ -241,7 +241,6 @@ public class ProblemThree extends ProblemTwo {
             int leftFlightId = passengerRecord.getLeftFlightId();
             int passengerNumbers = passengerRecord.getPassengerNumbers();
 
-
             if (conflictId.contains(arrivalFlightId)
                     || conflictId.contains(leftFlightId)) {
                 continue;
@@ -250,17 +249,29 @@ public class ProblemThree extends ProblemTwo {
             String arrivalFlightStationType = solutionVector.get(arrivalFlightId - 1);
             String leftFlightStationType = solutionVector.get(leftFlightId - 1);
 
-            String key = arrivalFlightType + leftFlightType + arrivalFlightStationType
-                    + leftFlightStationType;
-
-            if (!Constant.minProcedureTime.containsKey(key)) {
+            String key1 = arrivalFlightType + leftFlightType
+                    + arrivalFlightStationType.substring(0, 1)
+                    + leftFlightStationType.substring(0, 1);
+            if (!Constant.minProcedureTime.containsKey(key1)) {
+                throw new RuntimeException();
+            }
+            if (!Constant.mrtCount.containsKey(key1)) {
                 throw new RuntimeException();
             }
 
-            totalTime += Constant.minProcedureTime.get(key) * passengerNumbers;
+            String key2 = arrivalFlightStationType + leftFlightStationType;
+            if (!Constant.walkingTime.containsKey(key2)) {
+                throw new RuntimeException();
+            }
+
+            int currentTime = Constant.minProcedureTime.get(key1)
+                    + Constant.mrtCount.get(key1) * Constant.mrtTime
+                    + Constant.walkingTime.get(key2);
+
+            totalTime += (currentTime * passengerNumbers);
         }
 
-
+        return totalTime;
     }
 
     private void enumerationMethod() {
