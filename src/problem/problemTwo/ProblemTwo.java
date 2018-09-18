@@ -3,6 +3,7 @@ package problem.problemTwo;
 import problem.Problem;
 import problem.component.*;
 import util.ioUtil.excel.ExcelReader;
+import util.ioUtil.excel.ExcelWriter;
 
 import java.util.*;
 
@@ -608,12 +609,65 @@ public class ProblemTwo extends Problem {
 
     }
 
+    protected void exportGateSituationToExcel(Gate[] gatesArray) {
+
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+
+        for (int i = 1; i < gatesArray.length; i++) {
+
+            ArrayList<String> currentGate = new ArrayList<>();
+
+            Gate gate = gatesArray[i];
+            int id = gate.getId();
+            currentGate.add(Integer.toString(id));
+
+            LinkedList<FlightRecordWithStationType> flightRecord
+                    = gate.getFlightRecords();
+            for (int j = 0; j < flightRecord.size(); j++) {
+                int flightId = flightRecord.get(j).getId();
+                currentGate.add(Integer.toString(flightId));
+            }
+
+            result.add(currentGate);
+        }
+
+        ExcelWriter.exportXlsFile("resultOfProblemTwo.xls",
+                result, 0, null, 0, 0);
+    }
+
+    protected void exportConflictRecordToExcel(
+            HashSet<FlightRecordWithStationType> conflictRecord) {
+
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+
+        Iterator<FlightRecordWithStationType> iterator = conflictRecord.iterator();
+
+        while (iterator.hasNext()) {
+
+            ArrayList<String> currentRecord = new ArrayList<>();
+
+            FlightRecordWithStationType flightRecord = iterator.next();
+
+            currentRecord.add(Integer.toString(flightRecord.getId()));
+
+            result.add(currentRecord);
+        }
+
+        ExcelWriter.exportXlsFile("conflictOfProblemTwo.xls",
+                result, 0, null, 0, 0);
+    }
+
+    protected void exportToExcel() {
+
+        exportGateSituationToExcel(this.gatesArray);
+        exportConflictRecordToExcel(this.conflictRecord);
+    }
 
     protected void enumerationMethod() {
 
         SolutionVector solutionVector
                 = new SolutionVector(this.flightRecordArray.length - 1);
-        int maxSeed = 1;
+        int maxSeed = 2;
 
         for (int seed = 0; seed < maxSeed; seed++) {
 
@@ -623,12 +677,14 @@ public class ProblemTwo extends Problem {
 
             adjustCurrentSolutionVector(solutionVector);
 
-            int count = 0;
-            for (int i = 1; i < this.gatesArray.length;i++) {
+            /*int count = 0;
+            for (int i = 1; i < this.gatesArray.length; i++) {
 
                 Gate gate = gatesArray[i];
                 count += gate.getFlightRecords().size();
-            }
+            }*/
+
+            exportToExcel();
 
             System.out.println("haha");
         }
@@ -641,7 +697,6 @@ public class ProblemTwo extends Problem {
 
         enumerationMethod();
 
-        System.out.println("haha");
     }
 
     public static void main(String[] args) {
