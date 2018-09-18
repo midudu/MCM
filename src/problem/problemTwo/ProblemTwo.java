@@ -11,6 +11,7 @@ public class ProblemTwo extends Problem {
 
     protected int conflictCount = 0;
     protected HashSet<FlightRecordWithStationType> conflictRecord = new HashSet<>();
+    protected HashSet<Integer> conflictId = new HashSet<>();
 
     protected ArrayList<FlightRecordWithStationType> flightRecordArrayList
             = new ArrayList<>();
@@ -423,14 +424,16 @@ public class ProblemTwo extends Problem {
                         currentTypeGates, flightRecord);
 
                 if (!arrangeResult) {
-                    if (!conflictRecord.contains(flightRecord)) {
+                    if (!conflictId.contains(flightRecord.getId())) {
                         conflictCount++;
+                        conflictId.add(flightRecord.getId());
                         conflictRecord.add(flightRecord);
                     }
                 }
             } else {
-                if (!conflictRecord.contains(flightRecord)) {
+                if (!conflictId.contains(flightRecord.getId())) {
                     conflictCount++;
+                    conflictId.add(flightRecord.getId());
                     conflictRecord.add(flightRecord);
                 }
             }
@@ -485,10 +488,40 @@ public class ProblemTwo extends Problem {
         }
     }
 
-    protected int calculateTotalTimeOfPassengersProcedure() {
+    protected int calculateTotalTimeOfPassengersProcedure(
+            ArrayList<PassengerRecord> passengerRecordArrayList,
+            SolutionVector solutionVector) {
 
-        //fjaklgfalg
-        return -1;
+        int totalTime = 0;
+
+        for (int i = 0; i < passengerRecordArrayList.size(); i++) {
+
+            PassengerRecord passengerRecord = passengerRecordArrayList.get(i);
+
+            String arrivalFlightType = passengerRecord.getArrivalFlightType();
+            String leftFlightType = passengerRecord.getLeftFlightType();
+            int arrivalFlightId = passengerRecord.getArrivalFlightId();
+            int leftFlightId = passengerRecord.getLeftFlightId();
+
+            if (conflictId.contains(arrivalFlightId)
+                    || conflictId.contains(leftFlightId)) {
+                continue;
+            }
+
+            String arrivalFlightStationType = solutionVector.get(arrivalFlightId - 1);
+            String leftFlightStationType = solutionVector.get(leftFlightId - 1);
+
+            String key = arrivalFlightType + leftFlightType + arrivalFlightStationType
+                    + leftFlightStationType;
+
+            if (!Constant.minProcedureTime.containsKey(key)) {
+                throw new RuntimeException();
+            }
+
+            totalTime += Constant.minProcedureTime.get(key);
+        }
+
+        return totalTime;
     }
 
     protected void simulatedAnnealing() {
@@ -553,7 +586,7 @@ public class ProblemTwo extends Problem {
         }*/
     }
 
-    protected void clearGatesSet(ArrayList<ArrayList<Gate>> gatesSet) {
+    protected void clear() {
 
         for (int i = 0; i < gatesSet.size(); i++) {
 
@@ -564,10 +597,14 @@ public class ProblemTwo extends Problem {
                 gate.clear();
             }
         }
+
+        this.conflictId.clear();
+        this.conflictRecord.clear();
+        this.conflictCount = 0;
     }
 
     protected void initializeSolutionVectorOfEnumerationMethod(
-            SolutionVector solutionVector, int seed) {
+            SolutionVector solutionVector, int seed, int passengerNumbersThreshold) {
 
         String binarySeed = Integer.toBinaryString(seed);
         int currentSeedIndex = binarySeed.length() - 1;
@@ -588,7 +625,7 @@ public class ProblemTwo extends Problem {
                 } else {
                     int relativePassengers
                             = flightRecordArray[i].getRelativePassengers();
-                    if (relativePassengers > 60) {
+                    if (relativePassengers > passengerNumbersThreshold) {
 
                         if (currentSeedIndex < 0) {
                             solutionVector.set(id - 1, map[0]);
@@ -663,31 +700,63 @@ public class ProblemTwo extends Problem {
         exportConflictRecordToExcel(this.conflictRecord);
     }
 
+    protected int statisticEffectiveFlightRecords(Gate[] gatesArray) {
+
+        int count = 0;
+        for (int i = 1; i < gatesArray.length; i++) {
+
+            Gate gate = gatesArray[i];
+            count += gate.getFlightRecords().size();
+        }
+
+        return count;
+    }
+
+
     protected void enumerationMethod() {
+
+        long startTime = System.currentTimeMillis();
 
         SolutionVector solutionVector
                 = new SolutionVector(this.flightRecordArray.length - 1);
-        int maxSeed = 2;
+        int maxSeed = 8388608;
+        int minTime = Integer.MAX_VALUE;
+        int passengerNumbersThreshold = 39;
 
         for (int seed = 0; seed < maxSeed; seed++) {
 
-            clearGatesSet(gatesSet);
+            clear();
 
-            initializeSolutionVectorOfEnumerationMethod(solutionVector, seed);
+            initializeSolutionVectorOfEnumerationMethod(
+                    solutionVector, seed, passengerNumbersThreshold);
 
             adjustCurrentSolutionVector(solutionVector);
 
-            /*int count = 0;
-            for (int i = 1; i < this.gatesArray.length; i++) {
+            int totalTime = calculateTotalTimeOfPassengersProcedure(
+                    passengerRecordArrayList, solutionVector);
 
-                Gate gate = gatesArray[i];
-                count += gate.getFlightRecords().size();
-            }*/
+            int unconflictCount = statisticEffectiveFlightRecords(this.gatesArray);
+            int conflictCount = this.conflictCount;
 
-            exportToExcel();
+            if (totalTime < minTime) {
 
-            System.out.println("haha");
+                minTime = totalTime;
+                exportToExcel();
+            }
+
+            /*System.out.println(
+                    String.valueOf(totalTime) + "  "
+                            + String.valueOf(unconflictCount) + "  "
+                            + String.valueOf(conflictCount));*/
         }
+
+        System.out.println(minTime);
+
+        long endTime = System.currentTimeMillis();
+        double min = (endTime - startTime) / 1000.0 / 60.0;
+
+        System.out.println();
+        System.out.println("程序运行时间：" + String.valueOf(min) + "min");
     }
 
 
