@@ -427,7 +427,7 @@ public class ProblemTwo extends Problem {
                     }
                 }
 
-                generateNewSolutionVector();
+                //generateNewSolutionVector();
             }
 
             temperature *= descendingCoefficient;
@@ -438,6 +438,8 @@ public class ProblemTwo extends Problem {
     private void mainProcess() {
 
         initialization();
+
+        simulatedAnnealing();
 
         System.out.println("haha");
     }
