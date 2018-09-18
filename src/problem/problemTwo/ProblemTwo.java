@@ -25,10 +25,10 @@ public class ProblemTwo extends Problem {
 
     protected Gate[] gatesArray = new Gate[70];
 
-    private TreeSet<FlightRecordWithStationType> RTType = new TreeSet<>();
-    private TreeSet<FlightRecordWithStationType> RUType = new TreeSet<>();
-    private TreeSet<FlightRecordWithStationType> NTType = new TreeSet<>();
-    private TreeSet<FlightRecordWithStationType> NUType = new TreeSet<>();
+    protected TreeSet<FlightRecordWithStationType> RTType = new TreeSet<>();
+    protected TreeSet<FlightRecordWithStationType> RUType = new TreeSet<>();
+    protected TreeSet<FlightRecordWithStationType> NTType = new TreeSet<>();
+    protected TreeSet<FlightRecordWithStationType> NUType = new TreeSet<>();
 
     private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
 
@@ -255,7 +255,7 @@ public class ProblemTwo extends Problem {
         }
     }
 
-    protected void initGatesSet() {
+    private void initGatesSet() {
 
         for (int i = 0; i < 16; i++) {
             ArrayList<Gate> gateArrayList = new ArrayList<>();
@@ -346,7 +346,7 @@ public class ProblemTwo extends Problem {
         }
     }
 
-    protected void initialization() {
+    private void initialization() {
 
         ArrayList<ArrayList<String>> originalPucksData
                 = new ArrayList<>();
@@ -368,7 +368,7 @@ public class ProblemTwo extends Problem {
 
     }
 
-    protected void adjustCurrentSolutionVector(SolutionVector solutionVector) {
+    private void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
         arrangeCurrentTypeFlightRecords(this.RTType, solutionVector);
 
@@ -379,7 +379,7 @@ public class ProblemTwo extends Problem {
         arrangeCurrentTypeFlightRecords(this.NUType, solutionVector);
     }
 
-    protected void arrangeCurrentTypeFlightRecords(
+    private void arrangeCurrentTypeFlightRecords(
             TreeSet<FlightRecordWithStationType> currentTypeFlightRecords
             , SolutionVector solutionVector) {
 
@@ -394,7 +394,7 @@ public class ProblemTwo extends Problem {
         }
     }
 
-    protected void decideCurrentFlightRecordBelongs(
+    private void decideCurrentFlightRecordBelongs(
             FlightRecordWithStationType flightRecord, SolutionVector solutionVector) {
 
         String stationType = flightRecord.getStationType();
@@ -454,8 +454,7 @@ public class ProblemTwo extends Problem {
         for (int i = 0; i < currentTypeGates.size(); i++) {
 
             Gate currentGate = currentTypeGates.get(i);
-            LinkedList<FlightRecordWithStationType>
-                    flightRecordLinkedList
+            LinkedList<FlightRecordWithStationType> flightRecordLinkedList
                     = currentGate.getFlightRecords();
 
             if (flightRecordLinkedList.isEmpty()) {
@@ -603,7 +602,7 @@ public class ProblemTwo extends Problem {
         this.conflictCount = 0;
     }
 
-    protected void initializeSolutionVectorOfEnumerationMethod(
+    private void initializeSolutionVectorOfEnumerationMethod(
             SolutionVector solutionVector, int seed, int passengerNumbersThreshold) {
 
         String binarySeed = Integer.toBinaryString(seed);
@@ -713,7 +712,7 @@ public class ProblemTwo extends Problem {
     }
 
 
-    protected void enumerationMethod() {
+    private void enumerationMethod() {
 
         long startTime = System.currentTimeMillis();
 
