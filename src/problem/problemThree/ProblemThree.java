@@ -265,9 +265,9 @@ public class ProblemThree extends ProblemTwo {
 
         arrangeCurrentTypeFlightRecords(this.RTType, solutionVector);
 
-        arrangeCurrentTypeFlightRecords(this.NTType, solutionVector);
-
         arrangeCurrentTypeFlightRecords(this.RUType, solutionVector);
+
+        arrangeCurrentTypeFlightRecords(this.NTType, solutionVector);
 
         arrangeCurrentTypeFlightRecords(this.NUType, solutionVector);
     }
@@ -464,6 +464,8 @@ public class ProblemThree extends ProblemTwo {
 
     private void simulatedAnnealingMethod() {
 
+        int acceptCount = 0;
+
         SolutionVector solutionVector
                 = new SolutionVector(this.flightRecordArray.length - 1);
 
@@ -472,8 +474,8 @@ public class ProblemThree extends ProblemTwo {
         int minTime = Integer.MAX_VALUE;
 
         double originalTemperature = 97.0;
-        double finalTemperature = 3.0;
-        double descendingCoefficient = 0.95;
+        double finalTemperature = 1.0;
+        double descendingCoefficient = 0.9999;
         double temperatureCoefficient = 2.0;
 
         double currentTemperature = originalTemperature;
@@ -515,6 +517,8 @@ public class ProblemThree extends ProblemTwo {
                         minTime = totalTime;
                         exportToExcel();
                         solutionVector = currentSolutionVector;
+
+                        acceptCount++;
                     }
                 }
 
@@ -528,6 +532,8 @@ public class ProblemThree extends ProblemTwo {
         }
 
         System.out.println(minTime);
+
+        System.out.println("accept count:" + String.valueOf(acceptCount));
 
     }
 
