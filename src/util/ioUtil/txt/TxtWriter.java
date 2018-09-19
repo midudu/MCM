@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+// 这个类用来导出txt文件
 public class TxtWriter {
 
     public static void writeTxtFile(String fileName, ArrayList<FlightRecord> data) {

@@ -7,6 +7,8 @@ import util.ioUtil.excel.ExcelWriter;
 
 import java.util.*;
 
+
+// 这个类用于解决问题的第三问
 public class ProblemThree extends ProblemTwo {
 
     private ArrayList<ArrayList<Integer>> rouletteElement = new ArrayList<>();

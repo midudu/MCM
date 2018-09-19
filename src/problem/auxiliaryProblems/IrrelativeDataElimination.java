@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+// 这个类用于临时处理数据
 public class IrrelativeDataElimination extends Problem {
 
     private ArrayList<ArrayList<String>> originalPucksData

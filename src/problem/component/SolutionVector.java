@@ -1,5 +1,6 @@
 package problem.component;
 
+// 这个类用来存储一组解
 public class SolutionVector {
 
     private String[] solutionVector;

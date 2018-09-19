@@ -8,9 +8,10 @@ import problem.problemTwo.ProblemTwo;
 import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
+
+// 这个类用来输出题目的“提交结果要求”部分第4问的结果
 public class TransferFailedPassengers extends ProblemTwo {
 
     protected void generateNewRecords(ArrayList<ArrayList<String>> originalPucksData,

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
+
+// 这个类包含了三个问题所共同需要的字段和方法
 public class Problem {
 
     protected ArrayList<FlightRecord> flightRecordArrayList

@@ -4,6 +4,7 @@ import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
 
+// 这个类用来输出题目的“提交结果要求”部分第4问的结果
 public class SuccessfulFlightRecord {
 
     private void problemOne() {

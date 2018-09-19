@@ -9,7 +9,7 @@ import util.paintUtil.opencv.DrawTimeSequence;
 
 import java.util.*;
 
-
+// 这个类用于解决问题的第一问
 public class ProblemOne extends Problem {
 
     private TreeSet<FlightRecord> DDN = new TreeSet<>();

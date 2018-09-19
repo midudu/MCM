@@ -6,6 +6,7 @@ import util.ioUtil.excel.ExcelWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// 这个类用于临时处理数据
 public class FindIDForTickets {
 
     private static void readData(ArrayList<ArrayList<String>> originalPucksData,

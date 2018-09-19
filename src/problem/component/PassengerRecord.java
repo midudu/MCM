@@ -1,5 +1,7 @@
 package problem.component;
 
+
+// 这个类用来存储一组旅客信息
 public class PassengerRecord {
 
     private int passengerNumbers;

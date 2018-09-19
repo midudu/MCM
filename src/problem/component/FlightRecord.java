@@ -1,7 +1,6 @@
 package problem.component;
 
-import java.util.Comparator;
-
+// 这个类用来存储一个航班信息
 public class FlightRecord implements Comparable<FlightRecord> {
 
     private int id;

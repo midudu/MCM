@@ -7,6 +7,7 @@ import util.ioUtil.excel.ExcelWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// 这个类用于临时处理数据
 public class TicketsSheetCompression extends Problem {
 
     private ArrayList<ArrayList<String>> originalTicketsData

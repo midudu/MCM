@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// 这个类用来读取txt文件
+
 public class TxtReader {
 
     /**

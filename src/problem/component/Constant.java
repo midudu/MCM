@@ -1,5 +1,6 @@
 package problem.component;
 
+// 这个类用来存储题目中给定的一些常数
 import java.util.HashMap;
 
 public class Constant {

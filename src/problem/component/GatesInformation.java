@@ -1,5 +1,6 @@
 package problem.component;
 
+// 这个类用来存储一个登机口信息
 public class GatesInformation {
 
     private int id;

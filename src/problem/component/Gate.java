@@ -2,6 +2,8 @@ package problem.component;
 
 import java.util.LinkedList;
 
+// 这个类存储了一个登机口信息，内部含有一个{@code LinkedList}类型的字段
+// 用于存储当前登机口接待的航班
 public class Gate {
 
     private int id;

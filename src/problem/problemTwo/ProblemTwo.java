@@ -7,6 +7,7 @@ import util.ioUtil.excel.ExcelWriter;
 
 import java.util.*;
 
+// 这个类用于解决问题的第二问
 public class ProblemTwo extends Problem {
 
     protected int conflictCount = 0;
