@@ -7,37 +7,53 @@ import util.ioUtil.excel.ExcelWriter;
 
 import java.util.*;
 
-// 这个类用于解决问题的第二问
+/**
+ * This class is to solve the problem two.
+ */
 public class ProblemTwo extends Problem {
 
+    /* The number of the flights which cannot be arranged */
     protected int conflictCount = 0;
+
+    /* A HashSet to store the conflict records */
     protected HashSet<FlightRecordWithStationType> conflictRecord = new HashSet<>();
+
+    /* A HashSet to store the id of the conflict records */
     protected HashSet<Integer> conflictId = new HashSet<>();
 
+    /* An ArrayList to store all the flight records */
     protected ArrayList<FlightRecordWithStationType> flightRecordArrayList
             = new ArrayList<>();
+
+    /* An ArrayList to store all the passenger records */
     protected ArrayList<PassengerRecord> passengerRecordArrayList
             = new ArrayList<>();
+
+    /* An ArrayList to store all the boarding gate records */
     protected ArrayList<Gate> gatesArrayList
             = new ArrayList<>();
 
+    /* An array to store all the flight records. The index in the array is the
+    id of the flight */
     protected FlightRecordWithStationType[] flightRecordArray
             = new FlightRecordWithStationType[243];
 
+    /* An array to store all the gate records. The index in the array is the
+    id of the gate */
     protected Gate[] gatesArray = new Gate[70];
 
+    /* Four TreeSet to store the different types of the flight records */
     protected TreeSet<FlightRecordWithStationType> RTType = new TreeSet<>();
     protected TreeSet<FlightRecordWithStationType> RUType = new TreeSet<>();
     protected TreeSet<FlightRecordWithStationType> NTType = new TreeSet<>();
     protected TreeSet<FlightRecordWithStationType> NUType = new TreeSet<>();
-
-    private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
 
     private ArrayList<ArrayList<Integer>> rouletteElement = new ArrayList<>();
     private int totalValueOfRoullete = 0;
 
     private int lastChangedFlightId = -1;
 
+    private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
     {
         gatesTypeIndex.put("IIWT", 0);
         gatesTypeIndex.put("IIWS", 1);
@@ -59,12 +75,6 @@ public class ProblemTwo extends Problem {
 
     private ArrayList<ArrayList<Gate>> gatesSet = new ArrayList<>();
 
-    private ArrayList<ArrayList<Gate>> gatesSetOfMinimumTime;
-
-    private SolutionVector solutionVectorOfTOrS
-            = new SolutionVector(flightRecordArray.length - 1);
-
-    private SolutionVector bestSolutionVectorOfTOrS;
 
     private void generateRouletteElement(){
 

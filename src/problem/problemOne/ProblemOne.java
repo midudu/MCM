@@ -3,34 +3,25 @@ package problem.problemOne;
 import problem.Problem;
 import problem.component.FlightRecord;
 import util.ioUtil.excel.ExcelWriter;
-import util.paintUtil.opencv.DrawTimeSequence;
 
 import java.util.*;
 
-// 这个类用于解决问题的第一问
+// This class is to solve problem one
 public class ProblemOne extends Problem {
 
-    private TreeSet<FlightRecord> DDN = new TreeSet<>();
-    private TreeSet<FlightRecord> DDW = new TreeSet<>();
-    private TreeSet<FlightRecord> DIN = new TreeSet<>();
-    private TreeSet<FlightRecord> DIW = new TreeSet<>();
-    private TreeSet<FlightRecord> IDN = new TreeSet<>();
-    private TreeSet<FlightRecord> IDW = new TreeSet<>();
-    private TreeSet<FlightRecord> IIN = new TreeSet<>();
-    private TreeSet<FlightRecord> IIW = new TreeSet<>();
-
-    private TreeSet<FlightRecord> DIN_IDN = new TreeSet<>();
-    private TreeSet<FlightRecord> DIW_IDW = new TreeSet<>();
-
-    private boolean mergeFlag = true;
-
+    /* The number of the flights which cannot be arranged */
     private int conflictCount = 0;
+
+    /* A HashSet to store the conflict records */
     private HashSet<FlightRecord> conflictRecord = new HashSet<>();
 
-
-    private ArrayList<ArrayList<LinkedList<FlightRecord>>> gate
+    /* An ArrayList to store all the boarding gates */
+    private ArrayList<ArrayList<LinkedList<FlightRecord>>> gates
             = new ArrayList<>();
 
+    /**
+     * To divide the boarding gates into 8 types and put them into {@code gates}
+     */
     private void initArrayListQueue() {
 
         ArrayList<LinkedList<FlightRecord>> IIW = new ArrayList<>();
@@ -81,16 +72,19 @@ public class ProblemOne extends Problem {
             IDN.add(queue);
         }
 
-        this.gate.add(IIW);
-        this.gate.add(IIN);
-        this.gate.add(IDW);
-        this.gate.add(IDN);
-        this.gate.add(DIW);
-        this.gate.add(DIN);
-        this.gate.add(DDW);
-        this.gate.add(DDN);
+        this.gates.add(IIW);
+        this.gates.add(IIN);
+        this.gates.add(IDW);
+        this.gates.add(IDN);
+        this.gates.add(DIW);
+        this.gates.add(DIN);
+        this.gates.add(DDW);
+        this.gates.add(DDN);
     }
 
+    /**
+     * The main function of the problem one
+     */
     private void getResultWithQueueMethod() {
 
         this.getFlightRecordArrayListFromExcel();
@@ -110,10 +104,13 @@ public class ProblemOne extends Problem {
 
             decideCurrentFlightRecordBelongs(flightRecord);
         }
-
-        //drawGatesTimeSequenceImage();
     }
 
+    /**
+     * To find a proper boarding gate for the current flight record and add it.
+     *
+     * @param flightRecord  the current flight record
+     */
     private void decideCurrentFlightRecordBelongs(FlightRecord flightRecord) {
 
         String arrivalType = flightRecord.getArrivalType();
@@ -129,7 +126,7 @@ public class ProblemOne extends Problem {
         }
 
         ArrayList<LinkedList<FlightRecord>> currentTypeGates
-                = this.gate.get(belongingIndex);
+                = this.gates.get(belongingIndex);
 
         int gateIndex = -1;
         int maxExistingFlightNumbers = 0;
@@ -156,17 +153,20 @@ public class ProblemOne extends Problem {
             this.conflictCount++;
             this.conflictRecord.add(flightRecord);
 
-            /*String filename ="resources\\image\\conflict\\" + arrivalType + leftType + planeType
-                    + "_" + String.valueOf(conflictCount) + ".png";
-
-            DrawTimeSequence.drawTimeSequenceImageOfConflictSituation(
-                    filename, currentTypeGates, flightRecord);*/
-
         } else {
             currentTypeGates.get(gateIndex).add(flightRecord);
         }
     }
 
+    /**
+     * To calculate the index of the gates in {@code gates} which the current
+     * flight record belongs to.
+     *
+     * @param arrivalType  the arrival type of the flight
+     * @param leftType  the left type of the flight
+     * @param planeType  the plane type of the flight
+     * @return
+     */
     private int calculateFlightBelongingIndex(
             String arrivalType, String leftType, String planeType) {
 
@@ -199,33 +199,10 @@ public class ProblemOne extends Problem {
         return result;
     }
 
-    private void drawGatesTimeSequenceImage() {
-
-        String[] gatesType = {"IIW", "IIN", "IDW", "IDN",
-                "DIW", "DIN", "DDW", "DDN"};
-
-        for (int i = 0; i < this.gate.size(); i++) {
-
-            ArrayList<LinkedList<FlightRecord>> currentTypeGates
-                    = this.gate.get(i);
-
-            for (int j = 0; j < currentTypeGates.size(); j++) {
-
-                LinkedList<FlightRecord> currentGate = currentTypeGates.get(j);
-                if (currentGate.isEmpty()) {
-                    continue;
-                }
-
-                String filename = "resources\\image\\gate\\" + gatesType[i] + "_" + String.valueOf(j)
-                        + ".png";
-
-                DrawTimeSequence.drawTimeSequenceImageOfASingleGate(
-                        filename, currentGate);
-            }
-        }
-    }
-
-    private void printFinalResultToExcel() {
+    /**
+     * To export to arrange result to excel.
+     */
+    private void exportFinalResultToExcel() {
 
         ArrayList<ArrayList<String>> finalResult
                 = new ArrayList<>();
@@ -240,14 +217,14 @@ public class ProblemOne extends Problem {
         hashMap.put(6,"DDW");
         hashMap.put(7,"DDN");
 
-        for (int i = 0; i < this.gate.size(); i++) {
+        for (int i = 0; i < this.gates.size(); i++) {
 
             ArrayList<String> gatesType = new ArrayList<>();
             gatesType.add(hashMap.get(i));
             finalResult.add(gatesType);
 
             ArrayList<LinkedList<FlightRecord>> currentTypeOfGates
-                    = this.gate.get(i);
+                    = this.gates.get(i);
 
             for (int j = 0; j < currentTypeOfGates.size(); j++) {
 
@@ -275,7 +252,10 @@ public class ProblemOne extends Problem {
                 0,null,0,0);
     }
 
-    private void printConflictResultToExcel() {
+    /**
+     * To export the conflict result to excel.
+     */
+    private void exportConflictResultToExcel() {
 
         ArrayList<ArrayList<String>> conflictRecordString
                 = new ArrayList<>();
@@ -306,9 +286,9 @@ public class ProblemOne extends Problem {
 
         problemOne.getResultWithQueueMethod();
 
-        problemOne.printFinalResultToExcel();
+        problemOne.exportFinalResultToExcel();
 
-        problemOne.printConflictResultToExcel();
+        problemOne.exportConflictResultToExcel();
 
         System.out.println("haha");
     }
