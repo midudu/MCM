@@ -1,30 +1,29 @@
 package problem;
 
 import problem.component.FlightRecord;
-import problem.component.GatesInformation;
 import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
 
-
-// 这个类包含了三个问题所共同需要的字段和方法
+/**
+ * This class contains some general fields and methods used in three problems.
+ */
 public class Problem {
 
+    /* An {@code ArrayList} container to store the flight records */
     protected ArrayList<FlightRecord> flightRecordArrayList
             = new ArrayList<>();
 
-    protected ArrayList<GatesInformation> gatesInformationArrayList
-            = new ArrayList<>();
-
+    /**
+     * To get the flight records from the original data
+     */
     protected void getFlightRecordArrayListFromExcel() {
 
         ArrayList<ArrayList<String>> originalData
                 = new ArrayList<>();
 
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
+                "./resources/InputData_2.xls",
                 0, true,
                 1, 243,
                 0, -1, originalData);
@@ -57,33 +56,12 @@ public class Problem {
         }
     }
 
-    protected void getGatesInformationArrayListFromExcel() {
-
-        ArrayList<ArrayList<String>> originalData
-                = new ArrayList<>();
-
-        ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
-                2, true,
-                1, 70,
-                0, -1, originalData);
-
-        for (int i = 0; i < originalData.size(); i++) {
-
-            String name = originalData.get(i).get(0);
-            String location = originalData.get(i).get(2);
-            String arrivalType = originalData.get(i).get(3);
-            String leftType = originalData.get(i).get(4);
-            String planeType = originalData.get(i).get(5);
-
-            GatesInformation gatesInformation
-                    = new GatesInformation(i, name, location,
-                    arrivalType, leftType, planeType);
-
-            this.gatesInformationArrayList.add(gatesInformation);
-        }
-    }
-
+    /**
+     * To calculate the passed minutes from the current date to 2018.1.1 0:00.
+     *
+     * @param date the current date
+     * @return the passed minutes from the current date to 2018.1.1 0:00
+     */
     protected int convertDateToMinute(String date) {
 
         String day = date.substring(date.length() - 2, date.length());
@@ -91,6 +69,12 @@ public class Problem {
         return Integer.valueOf(day) * 24 * 60;
     }
 
+    /**
+     * To calculate the passed minutes from the current time to 2018.1.20 0:00.
+     *
+     * @param time the current date
+     * @return the passed minutes from the current time to 2018.1.20 0:00.
+     */
     protected int convertTimeToMinute(String time) {
 
         String[] splitResult = time.split(":");
@@ -103,44 +87,11 @@ public class Problem {
                 + Integer.valueOf(splitResult[1].trim()));
     }
 
-    private void dealTicketsSheet() {
-
-        ArrayList<ArrayList<String>> originalData
-                = new ArrayList<>();
-
-        ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
-                0, true,
-                1, 243,
-                0, -1, originalData);
-
-        HashSet<String> arrivalFlightSet = new HashSet<>();
-
-        for (int i = 0; i < originalData.size(); i++) {
-
-            String arrivalFlight = originalData.get(i).get(2);
-
-            if (arrivalFlightSet.contains(arrivalFlight)) {
-                System.out.println(arrivalFlight);
-            } else {
-                arrivalFlightSet.add(arrivalFlight);
-            }
-        }
-
-        System.out.println("haha");
-    }
-
-
     // Below is for test
     public static void main(String[] args) {
 
         /*Problem problem = new Problem();
 
         problem.dealTicketsSheet();*/
-
-        for (int i = 0; i < 100; i++) {
-
-            System.out.println(new Random().nextDouble());
-        }
     }
 }

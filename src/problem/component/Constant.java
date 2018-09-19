@@ -1,10 +1,15 @@
 package problem.component;
 
-// 这个类用来存储题目中给定的一些常数
 import java.util.HashMap;
+
+/**
+ * This class is to store some important constants in the problems
+ */
 
 public class Constant {
 
+    /* The minimum procedure time between the time when a passenger lands on
+    the airport and the time when the passenger transfers to another flight*/
     public static HashMap<String, Integer> minProcedureTime
             = new HashMap<>();
 
@@ -31,7 +36,8 @@ public class Constant {
         minProcedureTime.put("IISS", 20);
     }
 
-
+    /* The number of times of a passenger must take MRT between the arrival
+    airport terminal and the left airport terminal */
     public static HashMap<String, Integer> mrtCount = new HashMap<>();
 
     static {
@@ -57,8 +63,10 @@ public class Constant {
         mrtCount.put("IISS", 0);
     }
 
+    /* The time a single MRT needs */
     public final static int mrtTime = 8;
 
+    /* The walking time of the passenger between an airport terminal to another */
     public static HashMap<String, Integer> walkingTime = new HashMap<>();
 
     static {

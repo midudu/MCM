@@ -2,9 +2,7 @@ package problem.problemOne;
 
 import problem.Problem;
 import problem.component.FlightRecord;
-import problem.component.GatesInformation;
 import util.ioUtil.excel.ExcelWriter;
-import util.ioUtil.txt.TxtWriter;
 import util.paintUtil.opencv.DrawTimeSequence;
 
 import java.util.*;

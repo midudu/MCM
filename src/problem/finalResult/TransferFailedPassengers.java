@@ -11,9 +11,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-// 这个类用来输出题目的“提交结果要求”部分第4问的结果
+/**
+ * To statistic the number of the passengers who fail to transfer from a flight
+ * to another.
+ */
 public class TransferFailedPassengers extends ProblemTwo {
 
+    /**
+     * To read the original information from the original data
+     *
+     * @param originalPucksData   the original data of the flight records
+     * @param originalTicketsData the original data of the passenger records
+     * @param originalGatesData   the original data of the boarding gates
+     */
     protected void generateNewRecords(ArrayList<ArrayList<String>> originalPucksData,
                                       ArrayList<ArrayList<String>> originalTicketsData,
                                       ArrayList<ArrayList<String>> originalGatesData) {
@@ -25,6 +35,13 @@ public class TransferFailedPassengers extends ProblemTwo {
         generateGates(originalGatesData);
     }
 
+    /**
+     * To build a hash map from the flight id to the corresponding gate id.
+     *
+     * @param flightIdToGateId   a hash map from the flight id to the
+     *                           corresponding gate id
+     * @param resultOfProblemTwo the result of the problem
+     */
     private void buildHashMap(HashMap<Integer, Integer> flightIdToGateId,
                               ArrayList<ArrayList<String>> resultOfProblemTwo) {
 
@@ -47,7 +64,11 @@ public class TransferFailedPassengers extends ProblemTwo {
     }
 
 
-    private void problemTwo() {
+    /**
+     * The main function to statistic the number of the passengers who fail to
+     * transfer from a flight to another.
+     */
+    private void problemTwoOrThree() {
 
         ArrayList<ArrayList<String>> originalPucksData
                 = new ArrayList<>();
@@ -61,7 +82,7 @@ public class TransferFailedPassengers extends ProblemTwo {
 
         ArrayList<ArrayList<String>> resultOfProblemTwo = new ArrayList<>();
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resultOfProblemTwo\\resultOfProblemTwo.xls",
+                "./resultOfProblemTwo/resultOfProblemTwo.xls",
                 0, true,
                 0, -1,
                 0, -1, resultOfProblemTwo);
@@ -175,6 +196,6 @@ public class TransferFailedPassengers extends ProblemTwo {
         TransferFailedPassengers transferFailedPassengers
                 = new TransferFailedPassengers();
 
-        transferFailedPassengers.problemTwo();
+        transferFailedPassengers.problemTwoOrThree();
     }
 }

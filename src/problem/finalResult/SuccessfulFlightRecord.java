@@ -4,9 +4,14 @@ import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
 
-// 这个类用来输出题目的“提交结果要求”部分第4问的结果
+/**
+ * To statistic the result of the successfully arranged flights.
+ */
 public class SuccessfulFlightRecord {
 
+    /**
+     * To get the result of the problem one.
+     */
     private void problemOne() {
 
         ArrayList<ArrayList<String>> resultOfProblemOne = new ArrayList<>();
@@ -50,6 +55,9 @@ public class SuccessfulFlightRecord {
                 + String.valueOf(wideSuccessfulRate));
     }
 
+    /**
+     * To get the result of the problem two.
+     */
     private void problemTwo() {
 
         ArrayList<ArrayList<String>> resultOfProblemTwo = new ArrayList<>();
@@ -111,6 +119,9 @@ public class SuccessfulFlightRecord {
 
     }
 
+    /**
+     * To get the result of the problem three.
+     */
     private void problemThree() {
 
         ArrayList<ArrayList<String>> resultOfProblemTwo = new ArrayList<>();

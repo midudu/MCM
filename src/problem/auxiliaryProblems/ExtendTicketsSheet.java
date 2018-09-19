@@ -7,8 +7,10 @@ import util.ioUtil.excel.ExcelWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class is to deal with the input data.
+ */
 
-// 这个类用于临时处理数据
 public class ExtendTicketsSheet extends Problem {
 
     private ArrayList<ArrayList<String>> originalPucksData

@@ -5,14 +5,20 @@ import util.ioUtil.excel.ExcelReader;
 
 import java.util.ArrayList;
 
-// 这个类用来输出题目的“提交结果要求”部分第4问的结果
-public class UseRateOfGates extends Problem {
 
-    private void problemOne() {
+/**
+ * To statistic the utilization rate of the boarding gates.
+ */
+public class UtilizationRateOfGates extends Problem {
+
+    /**
+     * The main function to statistic the utilization rate of the boarding gates.
+     */
+    private void problemOneOrTwoOrThree() {
 
         ArrayList<ArrayList<String>> resultOfProblemOne = new ArrayList<>();
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resultOfProblemThree\\resultOfProblemThree.xls",
+                "./resultOfProblemThree/resultOfProblemThree.xls",
                 0, true,
                 0, -1,
                 0, -1, resultOfProblemOne);
@@ -89,8 +95,8 @@ public class UseRateOfGates extends Problem {
 
     public static void main(String[] args) {
 
-        UseRateOfGates useRateOfGates = new UseRateOfGates();
+        UtilizationRateOfGates utilizationRateOfGates = new UtilizationRateOfGates();
 
-        useRateOfGates.problemOne();
+        utilizationRateOfGates.problemOneOrTwoOrThree();
     }
 }
