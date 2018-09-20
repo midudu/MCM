@@ -13,35 +13,44 @@ import java.util.List;
 
 import org.opencv.core.Mat;
 
-public class DrawTimeSequence {
+/**
+ * This class is to draw timing diagram using the methods in OpenCV.
+ */
+public class DrawTimingDiagram {
 
     static {
         String dllPath
-                = "C:\\OpenCV\\opencv\\build\\java\\x64\\opencv_java320.dll";
+                = "./lib/x64/opencv_java320.dll";
         System.load(dllPath);
     }
 
-    public static void drawTotalTimeSequenceTable(
+    /**
+     * To draw the timing diagram of the situation of all the boarding gates.
+     *
+     * @param filename           the file name of the output image
+     * @param distributionResult the distribution result of the boarding gates
+     */
+    public static void drawTotalTimingDiagramOfAllBoardingGates(
             String filename,
-            ArrayList<ArrayList<FlightRecord>> divisionResult) {
+            ArrayList<ArrayList<FlightRecord>> distributionResult) {
 
-        Mat resultMat = new Mat(divisionResult.size() * 20, 1440,
+        Mat resultMat = new Mat(distributionResult.size() * 20, 1440,
                 CvType.CV_8UC3, new Scalar(0, 0, 0));
 
         int startTime = 20 * 24 * 60;
         int endTime = 21 * 24 * 60;
 
-        for (int i = 0; i < divisionResult.size(); i++) {
+        for (int i = 0; i < distributionResult.size(); i++) {
 
             Point pt1 = new Point();
             Point pt2 = new Point();
             pt1.y = i * 20;
             pt2.y = i * 20 + 10;
 
-            for (int j = 0; j < divisionResult.get(i).size(); j++) {
+            for (int j = 0; j < distributionResult.get(i).size(); j++) {
 
-                int arrivalTime = divisionResult.get(i).get(j).getArrivalTime();
-                int leftTime = divisionResult.get(i).get(j).getLeftTime();
+                int arrivalTime = distributionResult.get(i).get(j).getArrivalTime();
+                int leftTime = distributionResult.get(i).get(j).getLeftTime();
                 arrivalTime = (arrivalTime < startTime ? startTime : arrivalTime);
                 leftTime = (leftTime > endTime ? endTime : leftTime);
 
@@ -62,7 +71,13 @@ public class DrawTimeSequence {
         //System.out.println("Draw Rectangle Completed!");
     }
 
-    public static void drawTimeSequenceImageOfASingleGate(
+    /**
+     * To draw the timing diagram of the situation of a boarding gate.
+     *
+     * @param filename the file name of the output image
+     * @param gate     the flight records in the current boarding gate
+     */
+    public static void drawTimingDiagramOfASingleGate(
             String filename, List<FlightRecord> gate) {
 
         Mat resultMat = new Mat(gate.size() * 20 + 10, 1440,
@@ -100,7 +115,15 @@ public class DrawTimeSequence {
         Imgcodecs.imwrite(filename, resultMat);
     }
 
-    public static void drawTimeSequenceImageOfConflictSituation(
+    /**
+     * To draw the timing diagram of the flight records which can not be
+     * arranged properly.
+     *
+     * @param filename         the file name of the output image
+     * @param currentTypeGates the current type of the boarding gates
+     * @param conflictRecord   the conflict flight records
+     */
+    public static void drawTimingDiagramOfConflictSituation(
             String filename, ArrayList<LinkedList<FlightRecord>> currentTypeGates,
             FlightRecord conflictRecord) {
 
@@ -138,7 +161,6 @@ public class DrawTimeSequence {
             Imgproc.rectangle(resultMat, pt1, pt2,
                     new Scalar(0, 0, 255), -1);
         }
-
 
 
         Point pt1 = new Point();

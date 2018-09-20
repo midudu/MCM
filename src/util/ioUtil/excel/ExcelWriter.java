@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-// 这个类用来导出Excel
+/**
+ * This class is to export excel (xls supported but xlsx not)
+ */
 public class ExcelWriter {
 
     public static void exportXlsFile(

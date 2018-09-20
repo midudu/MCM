@@ -9,7 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-// 这个类用来读取Excel
+/**
+ * This class is to read excel (xls supported but xlsx not)
+ */
 public class ExcelReader {
 
     /**

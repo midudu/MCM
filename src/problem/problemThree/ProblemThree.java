@@ -7,16 +7,27 @@ import util.ioUtil.excel.ExcelWriter;
 
 import java.util.*;
 
-
-// 这个类用于解决问题的第三问
+/**
+ * This class is to solve the problem three
+ */
 public class ProblemThree extends ProblemTwo {
 
+    /* An ArrayList to store the flight id and its relative numbers of
+    passengers */
     private ArrayList<ArrayList<Integer>> rouletteElement = new ArrayList<>();
+
+    /* The total value of the number of relative passengers */
     private int totalValueOfRoullete = 0;
 
+    /* The last changed id of the flight record during the generation of a new
+     solution in Simulated Annealing Method */
     private int lastChangedFlightId = -1;
 
+    /* An ArrayList to store all the boarding gates by their type */
     private ArrayList<ArrayList<Gate>> gatesSet = new ArrayList<>();
+
+    /* A HashMap to store the corresponding relationship between the boarding
+    gate type and the index in {@code gatesSet} */
     private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
 
     {
@@ -93,6 +104,9 @@ public class ProblemThree extends ProblemTwo {
         gatesTypeIndex.put("DDNSE", 55);
     }
 
+
+    /* A HashMap to store the backup boarding gates if the current boarding
+    gates cannot arrange the flight */
     private HashMap<String, ArrayList<String>> backupGates = new HashMap<>();
 
     {
@@ -150,6 +164,10 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
+    /**
+     * To clear the state information before every iteration in Simulated
+     * Annealing starts.
+     */
     private void clear() {
 
         for (int i = 0; i < gatesSet.size(); i++) {
@@ -167,12 +185,20 @@ public class ProblemThree extends ProblemTwo {
         this.conflictCount = 0;
     }
 
+    /**
+     * The interface function of export results to excel.
+     */
     private void exportToExcel() {
 
         exportGateSituationToExcel(this.gatesArray);
         exportConflictRecordToExcel(this.conflictRecord);
     }
 
+    /**
+     * To export the flights situation in every boarding gates to excel.
+     *
+     * @param gatesArray  An array to store all the boarding gates
+     */
     private void exportGateSituationToExcel(Gate[] gatesArray) {
 
         ArrayList<ArrayList<String>> result = new ArrayList<>();
@@ -199,6 +225,11 @@ public class ProblemThree extends ProblemTwo {
                 result, 0, null, 0, 0);
     }
 
+    /**
+     * To export the flight record which cannot be arranged properly to excel.
+     *
+     * @param conflictRecord  the conflict flight record
+     */
     private void exportConflictRecordToExcel(
             HashSet<FlightRecordWithStationType> conflictRecord) {
 
@@ -221,6 +252,10 @@ public class ProblemThree extends ProblemTwo {
                 result, 0, null, 0, 0);
     }
 
+    /**
+     * To add the flight id and its relative number of passengers into
+     * {@code flightRecordArrayList} for subsequent Roulette.
+     */
     private void generateRouletteElement() {
 
         for (int i = 0; i < this.flightRecordArrayList.size(); i++) {
@@ -246,6 +281,12 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
+    /**
+     * To find a flight id which is to be changed in the solution vector with
+     * Roulette method.
+     *
+     * @return the flight id which is to be changed in the solution vector
+     */
     private int roullete() {
 
         double randomValue = new Random().nextDouble() * this.totalValueOfRoullete;
@@ -263,6 +304,12 @@ public class ProblemThree extends ProblemTwo {
         return -1;
     }
 
+    /**
+     * To adjust the current solution vector so that as many flights can be
+     * arranged properly as possible.
+     *
+     * @param solutionVector the current solution vector
+     */
     private void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
         arrangeCurrentTypeFlightRecords(this.RTType, solutionVector);
@@ -274,6 +321,14 @@ public class ProblemThree extends ProblemTwo {
         arrangeCurrentTypeFlightRecords(this.NUType, solutionVector);
     }
 
+    /**
+     * The auxiliary function of {@code adjustCurrentSolutionVector}. The aim
+     * is to arrange a specific type of flight records properly and adjust the
+     * solution vector if necessary.
+     *
+     * @param currentTypeFlightRecords a type of flight records set
+     * @param solutionVector           the solution vector
+     */
     private void arrangeCurrentTypeFlightRecords(
             TreeSet<FlightRecordWithStationType> currentTypeFlightRecords
             , SolutionVector solutionVector) {
@@ -289,6 +344,12 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
+    /**
+     * To find a proper boarding gates of the current flight record.
+     *
+     * @param flightRecord   the current flight record
+     * @param solutionVector the solution vector
+     */
     private void decideCurrentFlightRecordBelongs(
             FlightRecordWithStationType flightRecord, SolutionVector solutionVector) {
 
@@ -340,6 +401,15 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
+    /**
+     * To calculate the total time used of the procedure time on transferring
+     * flights of every passenger.
+     *
+     * @param passengerRecordArrayList An ArrayList to store all the passenger
+     *                                 records
+     * @param solutionVector           the solution vector
+     * @return the total time
+     */
     private int calculateTotalTimeOfPassengersProcedure(
             ArrayList<PassengerRecord> passengerRecordArrayList,
             SolutionVector solutionVector) {
@@ -389,7 +459,12 @@ public class ProblemThree extends ProblemTwo {
         return totalTime;
     }
 
-    private void initializeSolutionVectorFromProblemTwo(
+    /**
+     * Get the initial solution from the existing result.
+     *
+     * @param solutionVector the initial solution vector
+     */
+    private void initializeSolutionVectorFromProblemThree(
             SolutionVector solutionVector) {
 
         ArrayList<ArrayList<String>> resultOfProblemTwo
@@ -426,7 +501,14 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
-    private SolutionVector[] generateNewSolutionVector(SolutionVector solutionVector) {
+    /**
+     * To generate new solution vectors according to the current solution vector
+     *
+     * @param solutionVector the current solution vector
+     * @return new solutions vector generated from the current solution vector
+     */
+    private SolutionVector[] generateNewSolutionVectors(
+            SolutionVector solutionVector) {
 
         int toBeChangedFlightId = roullete();
         while (toBeChangedFlightId == lastChangedFlightId) {
@@ -464,6 +546,9 @@ public class ProblemThree extends ProblemTwo {
         return variationResult;
     }
 
+    /**
+     * The main process of the problem. The method used is Simulated Annealing.
+     */
     private void simulatedAnnealingMethod() {
 
         System.out.println("Calculating...");
@@ -473,7 +558,7 @@ public class ProblemThree extends ProblemTwo {
         SolutionVector solutionVector
                 = new SolutionVector(this.flightRecordArray.length - 1);
 
-        initializeSolutionVectorFromProblemTwo(solutionVector);
+        initializeSolutionVectorFromProblemThree(solutionVector);
 
         int minTime = 84434;
         int finalConflictCount = -1;
@@ -489,7 +574,7 @@ public class ProblemThree extends ProblemTwo {
         while (currentTemperature > finalTemperature) {
 
             SolutionVector[] solutionVectors =
-                    generateNewSolutionVector(solutionVector);
+                    generateNewSolutionVectors(solutionVector);
 
             for (int i = 0; i < solutionVectors.length; i++) {
 
@@ -561,6 +646,10 @@ public class ProblemThree extends ProblemTwo {
         System.out.println("haha");
     }
 
+    /**
+     * To divide the boarding gates into different types and add them to
+     * different containers.
+     */
     private void initGatesSet() {
 
         for (int i = 0; i < 56; i++) {
@@ -609,6 +698,9 @@ public class ProblemThree extends ProblemTwo {
         }
     }
 
+    /**
+     * To do the initialization of the problem.
+     */
     private void initialization() {
 
         ArrayList<ArrayList<String>> originalPucksData

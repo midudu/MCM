@@ -48,12 +48,20 @@ public class ProblemTwo extends Problem {
     protected TreeSet<FlightRecordWithStationType> NTType = new TreeSet<>();
     protected TreeSet<FlightRecordWithStationType> NUType = new TreeSet<>();
 
+    /* An ArrayList to store the flight id and its relative numbers of passengers */
     private ArrayList<ArrayList<Integer>> rouletteElement = new ArrayList<>();
+
+    /* The total value of the number of relative passengers */
     private int totalValueOfRoullete = 0;
 
+    /* The last changed id of the flight record during the generation of a new
+     solution in Simulated Annealing Method */
     private int lastChangedFlightId = -1;
 
+    /* A HashMap to store the corresponding relationship between the boarding
+    gate type and the index in {@code gatesSet} */
     private HashMap<String, Integer> gatesTypeIndex = new HashMap<>();
+
     {
         gatesTypeIndex.put("IIWT", 0);
         gatesTypeIndex.put("IIWS", 1);
@@ -73,10 +81,15 @@ public class ProblemTwo extends Problem {
         gatesTypeIndex.put("DDNS", 15);
     }
 
+    /* An ArrayList to store all the boarding gates by their type */
     private ArrayList<ArrayList<Gate>> gatesSet = new ArrayList<>();
 
 
-    private void generateRouletteElement(){
+    /**
+     * To add the flight id and its relative number of passengers into
+     * {@code flightRecordArrayList} for subsequent Roulette.
+     */
+    private void generateRouletteElement() {
 
         for (int i = 0; i < this.flightRecordArrayList.size(); i++) {
 
@@ -101,6 +114,12 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To find a flight id which is to be changed in the solution vector with
+     * Roulette method.
+     *
+     * @return the flight id which is to be changed in the solution vector
+     */
     private int roullete() {
 
         double randomValue = new Random().nextDouble() * this.totalValueOfRoullete;
@@ -118,6 +137,12 @@ public class ProblemTwo extends Problem {
         return -1;
     }
 
+    /**
+     * To generate a new solution vector according to the current solution vector
+     *
+     * @param solutionVector the current solution vector
+     * @return a new solution vector generated from the current solution vector
+     */
     private SolutionVector generateNewSolutionVector(SolutionVector solutionVector) {
 
         int toBeChangedFlightId = roullete();
@@ -135,13 +160,18 @@ public class ProblemTwo extends Problem {
         return newSolutionVector;
     }
 
+    /**
+     * Get the initial solution from the existing result.
+     *
+     * @param solutionVector the initial solution vector
+     */
     private void initializeSolutionVector(SolutionVector solutionVector) {
 
         ArrayList<ArrayList<String>> resultOfProblemTwo
                 = new ArrayList<>();
 
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resultOfProblemTwo\\resultOfProblemTwoForProgram.xls",
+                "./resultOfProblemTwo/resultOfProblemTwoForProgram.xls",
                 0, true,
                 0, 69,
                 0, -1, resultOfProblemTwo);
@@ -170,34 +200,13 @@ public class ProblemTwo extends Problem {
         }
     }
 
-    protected ArrayList<ArrayList<Gate>> cloneGatesSet(
-            ArrayList<ArrayList<Gate>> gatesSet) {
-
-        ArrayList<ArrayList<Gate>> result = new ArrayList<>();
-
-        for (int i = 0; i < gatesSet.size(); i++) {
-
-            ArrayList<Gate> newGateArrayList = new ArrayList<>();
-
-            ArrayList<Gate> currentGateArrayList = gatesSet.get(i);
-
-            for (int j = 0; j < currentGateArrayList.size(); j++) {
-
-                Gate currentGate = currentGateArrayList.get(j);
-                Gate newGate = new Gate(
-                        currentGate.getId(), currentGate.getHallType(),
-                        currentGate.getLocation(), currentGate.getArrivalType(),
-                        currentGate.getLeftType(), currentGate.getPlaneType());
-
-                newGateArrayList.add(newGate);
-            }
-
-            result.add(newGateArrayList);
-        }
-
-        return result;
-    }
-
+    /**
+     * Read original data from file.
+     *
+     * @param originalPucksData   the original data of flight records
+     * @param originalTicketsData the original data of passenger records
+     * @param originalGatesData   the original data of the boarding gates
+     */
     protected void readOriginalData(
             ArrayList<ArrayList<String>> originalPucksData,
             ArrayList<ArrayList<String>> originalTicketsData,
@@ -208,16 +217,26 @@ public class ProblemTwo extends Problem {
         readOriginalGatesDate(originalGatesData);
     }
 
+    /**
+     * To read the original data of the flight records
+     *
+     * @param originalPucksData the original data of the flight records
+     */
     protected void readOriginalPucksData(
             ArrayList<ArrayList<String>> originalPucksData) {
 
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\usefulPucksForProgram.xls",
+                "./usefulPucksForProgram.xls",
                 0, true,
                 1, 243,
                 0, -1, originalPucksData);
     }
 
+    /**
+     * To read the original data of the passenger records
+     *
+     * @param originalTicketsData the original data of the passenger records
+     */
     protected void readOriginalTicketsData(
             ArrayList<ArrayList<String>> originalTicketsData) {
 
@@ -228,16 +247,27 @@ public class ProblemTwo extends Problem {
                 0, -1, originalTicketsData);
     }
 
+    /**
+     * To read the original data of the boarding gates.
+     *
+     * @param originalGatesData the original data of the boarding gates
+     */
     protected void readOriginalGatesDate(
             ArrayList<ArrayList<String>> originalGatesData) {
 
         ExcelReader.importXlsFile(
-                "E:\\Java_Projects\\MCM\\resources\\InputData_2.xls",
+                "./resources/InputData_2.xls",
                 2, true,
                 1, 70,
                 0, -1, originalGatesData);
     }
 
+    /**
+     * To add the original data of the flight records to
+     * {@code flightRecordArrayList}.
+     *
+     * @param originalPucksData the original data of the flight records
+     */
     protected void generateFlightRecords(
             ArrayList<ArrayList<String>> originalPucksData) {
 
@@ -290,6 +320,12 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To add the original data of the passenger records to
+     * {@code passengerRecordArrayList}.
+     *
+     * @param originalTicketsData the original data of the passenger records
+     */
     protected void generatePassengerRecords(
             ArrayList<ArrayList<String>> originalTicketsData) {
 
@@ -309,9 +345,13 @@ public class ProblemTwo extends Problem {
 
             this.passengerRecordArrayList.add(passengerRecord);
         }
-
     }
 
+    /**
+     * To add the original data of the boarding gates to {@code gatesArrayList}.
+     *
+     * @param originalGatesData the original data of the boarding gates
+     */
     protected void generateGates(ArrayList<ArrayList<String>> originalGatesData) {
 
         for (int i = 0; i < originalGatesData.size(); i++) {
@@ -332,6 +372,10 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To divide the flight records into four types and add them to different
+     * container.
+     */
     protected void initFlightRecordTreeSets() {
 
         for (int i = 0; i < this.flightRecordArrayList.size(); i++) {
@@ -365,6 +409,10 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To divide the boarding gates into different types and add them to
+     * different containers.
+     */
     private void initGatesSet() {
 
         for (int i = 0; i < 16; i++) {
@@ -411,6 +459,14 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * The interface function of generating records of flights, passengers and
+     * gates from the original data.
+     *
+     * @param originalPucksData   the original data of the flight records
+     * @param originalTicketsData the original data of the passenger records
+     * @param originalGatesData   the original data of the boarding gates
+     */
     protected void generateRecords(
             ArrayList<ArrayList<String>> originalPucksData,
             ArrayList<ArrayList<String>> originalTicketsData,
@@ -427,6 +483,10 @@ public class ProblemTwo extends Problem {
         generateGatesArray();
     }
 
+    /**
+     * To generate {@code flightRecordArray}. In {@code flightRecordArray}, the
+     * index is equal to the id of the flight records.
+     */
     protected void generateFlightRecordArray() {
 
         if (this.flightRecordArrayList.isEmpty()) {
@@ -444,6 +504,10 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To generate {@code gatesArray}. In {@code gatesArray}, the index is
+     * equal to the id of the boarding gates.
+     */
     protected void generateGatesArray() {
 
         for (int i = 0; i < this.gatesArrayList.size(); i++) {
@@ -456,6 +520,9 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To do the initialization of the problem.
+     */
     private void initialization() {
 
         ArrayList<ArrayList<String>> originalPucksData
@@ -475,6 +542,12 @@ public class ProblemTwo extends Problem {
         generateRouletteElement();
     }
 
+    /**
+     * To adjust the current solution vector so that as many flights can be
+     * arranged properly as possible.
+     *
+     * @param solutionVector the current solution vector
+     */
     private void adjustCurrentSolutionVector(SolutionVector solutionVector) {
 
         arrangeCurrentTypeFlightRecords(this.RTType, solutionVector);
@@ -486,9 +559,17 @@ public class ProblemTwo extends Problem {
         arrangeCurrentTypeFlightRecords(this.NUType, solutionVector);
     }
 
+    /**
+     * The auxiliary function of {@code adjustCurrentSolutionVector}. The aim
+     * is to arrange a specific type of flight records properly and adjust the
+     * solution vector if necessary.
+     *
+     * @param currentTypeFlightRecords a type of flight records set
+     * @param solutionVector           the solution vector
+     */
     private void arrangeCurrentTypeFlightRecords(
-            TreeSet<FlightRecordWithStationType> currentTypeFlightRecords
-            , SolutionVector solutionVector) {
+            TreeSet<FlightRecordWithStationType> currentTypeFlightRecords,
+            SolutionVector solutionVector) {
 
         Iterator<FlightRecordWithStationType> iterator
                 = currentTypeFlightRecords.iterator();
@@ -501,8 +582,15 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To find a proper boarding gates of the current flight record.
+     *
+     * @param flightRecord   the current flight record
+     * @param solutionVector the solution vector
+     */
     private void decideCurrentFlightRecordBelongs(
-            FlightRecordWithStationType flightRecord, SolutionVector solutionVector) {
+            FlightRecordWithStationType flightRecord,
+            SolutionVector solutionVector) {
 
         String stationType = flightRecord.getStationType();
 
@@ -547,6 +635,15 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To find a proper time range for the current flight in the current
+     * type of the boarding gates.
+     *
+     * @param currentTypeGates a type of the boarding gates
+     * @param flightRecord     the current flight record
+     * @return true if a proper time range can be arranged for the current
+     * flight and false for not
+     */
     protected boolean arrangeOnCurrentTypeOfGates(
             ArrayList<Gate> currentTypeGates,
             FlightRecordWithStationType flightRecord) {
@@ -594,6 +691,15 @@ public class ProblemTwo extends Problem {
         }
     }
 
+    /**
+     * To calculate the total time used of the procedure time on transferring
+     * flights of every passenger.
+     *
+     * @param passengerRecordArrayList An ArrayList to store all the passenger
+     *                                 records
+     * @param solutionVector           the solution vector
+     * @return the total time
+     */
     private int calculateTotalTimeOfPassengersProcedure(
             ArrayList<PassengerRecord> passengerRecordArrayList,
             SolutionVector solutionVector) {
@@ -632,6 +738,9 @@ public class ProblemTwo extends Problem {
         return totalTime;
     }
 
+    /**
+     * The main process of the problem. The method used is Simulated Annealing.
+     */
     private void simulatedAnnealing() {
 
         System.out.println("Calculating...");
@@ -714,6 +823,10 @@ public class ProblemTwo extends Problem {
         System.out.println("accept count:" + String.valueOf(acceptCount));
     }
 
+    /**
+     * To clear the state information before every iteration in Simulated
+     * Annealing starts.
+     */
     private void clear() {
 
         for (int i = 0; i < gatesSet.size(); i++) {
@@ -731,49 +844,11 @@ public class ProblemTwo extends Problem {
         this.conflictCount = 0;
     }
 
-    private void initializeSolutionVectorOfEnumerationMethod(
-            SolutionVector solutionVector, int seed, int passengerNumbersThreshold) {
-
-        String binarySeed = Integer.toBinaryString(seed);
-        int currentSeedIndex = binarySeed.length() - 1;
-
-        String[] map = {"T", "S"};
-
-        for (int i = 1; i < flightRecordArray.length; i++) {
-
-            int id = flightRecordArray[i].getId();
-
-            String stationType = flightRecordArray[i].getStationType();
-
-            if (stationType.contains("T")) {
-                solutionVector.set(id - 1, map[0]);
-            } else {
-                if (stationType.contains("N")) {
-                    solutionVector.set(id - 1, map[new Random().nextInt(2)]);
-                } else {
-                    int relativePassengers
-                            = flightRecordArray[i].getRelativePassengers();
-                    if (relativePassengers > passengerNumbersThreshold) {
-
-                        if (currentSeedIndex < 0) {
-                            solutionVector.set(id - 1, map[0]);
-                        } else {
-                            solutionVector.set(id - 1,
-                                    map[Integer.valueOf(Character.toString(
-                                            binarySeed.charAt(currentSeedIndex)))]);
-
-                            currentSeedIndex--;
-                        }
-
-                    } else {
-                        solutionVector.set(id - 1, map[new Random().nextInt(2)]);
-                    }
-                }
-            }
-        }
-
-    }
-
+    /**
+     * To export the flights situation in every boarding gates to excel.
+     *
+     * @param gatesArray  An array to store all the boarding gates
+     */
     private void exportGateSituationToExcel(Gate[] gatesArray) {
 
         ArrayList<ArrayList<String>> result = new ArrayList<>();
@@ -800,6 +875,11 @@ public class ProblemTwo extends Problem {
                 result, 0, null, 0, 0);
     }
 
+    /**
+     * To export the flight record which cannot be arranged properly to excel.
+     *
+     * @param conflictRecord  the conflict flight record
+     */
     private void exportConflictRecordToExcel(
             HashSet<FlightRecordWithStationType> conflictRecord) {
 
@@ -822,17 +902,26 @@ public class ProblemTwo extends Problem {
                 result, 0, null, 0, 0);
     }
 
+    /**
+     * The interface function of export results to excel.
+     */
     private void exportToExcel() {
 
         exportGateSituationToExcel(this.gatesArray);
         exportConflictRecordToExcel(this.conflictRecord);
     }
 
+    /**
+     * To do the statistic of the number of the flight records which can be
+     * arranged properly.
+     *
+     * @param gatesArray  an Array to store the boarding gates
+     * @return the number of the flight records which can be arranged properly
+     */
     protected int statisticEffectiveFlightRecords(Gate[] gatesArray) {
 
         int count = 0;
         for (int i = 1; i < gatesArray.length; i++) {
-
             Gate gate = gatesArray[i];
             count += gate.getFlightRecords().size();
         }
@@ -841,58 +930,10 @@ public class ProblemTwo extends Problem {
     }
 
 
-    private void enumerationMethod() {
-
-        long startTime = System.currentTimeMillis();
-
-        SolutionVector solutionVector
-                = new SolutionVector(this.flightRecordArray.length - 1);
-        int maxSeed = 8388608;
-        int minTime = Integer.MAX_VALUE;
-        int passengerNumbersThreshold = 39;
-
-        for (int seed = 0; seed < maxSeed; seed++) {
-
-            clear();
-
-            initializeSolutionVectorOfEnumerationMethod(
-                    solutionVector, seed, passengerNumbersThreshold);
-
-            adjustCurrentSolutionVector(solutionVector);
-
-            int totalTime = calculateTotalTimeOfPassengersProcedure(
-                    passengerRecordArrayList, solutionVector);
-
-            int unconflictCount = statisticEffectiveFlightRecords(this.gatesArray);
-            int conflictCount = this.conflictCount;
-
-            if (totalTime < minTime) {
-
-                minTime = totalTime;
-                exportToExcel();
-            }
-
-            /*System.out.println(
-                    String.valueOf(totalTime) + "  "
-                            + String.valueOf(unconflictCount) + "  "
-                            + String.valueOf(conflictCount));*/
-        }
-
-        System.out.println(minTime);
-
-        long endTime = System.currentTimeMillis();
-        double min = (endTime - startTime) / 1000.0 / 60.0;
-
-        System.out.println();
-        System.out.println("程序运行时间：" + String.valueOf(min) + "min");
-    }
-
-
     private void mainProcess() {
 
         initialization();
 
-        //enumerationMethod();
         simulatedAnnealing();
     }
 
