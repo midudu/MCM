@@ -1,6 +1,6 @@
 [English Version](README_en.md "English Version")
 
-第15届中国研究生数学建模竞赛F题的源代码
+第15届中国研究生数学建模竞赛__F题__的源代码
 
 ## 整体目录结构
 
